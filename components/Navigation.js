@@ -36,26 +36,33 @@ export default function Navigation() {
 
   return (
     <NavigationContainer>
+      <Stack.Navigator> 
       {!isLoggedIn ? (
-      <Stack.Navigator>          
+        <>  
         <Stack.Screen name="Welcome" component={Landing} options={{ headerShown: false }} />
         <Stack.Screen name="Register" component={Register} options={{ headerShown: false }} />
         <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
-      </Stack.Navigator>
+        </>  
         ) : (
-        <Tab.Navigator
-        tabBarPosition="bottom"
-        screenOptions={{
-        tabBarActiveTintColor: 'blue',
-        tabBarInactiveTintColor: 'green',
-        tabBarPressColor: 'blue'
-        }}>
-        <Tab.Screen name="Todo" component={Todo} />
-        <Tab.Screen name="Budget" component={Budget} />
-        <Tab.Screen name="Calendar" component={Calendar} />
-      </Tab.Navigator>
+       <Stack.Screen name="TabNav" component={TabNavigator} options={{ headerShown: false }} />
         )}
-
+        </Stack.Navigator>
     </NavigationContainer>
+  )
+}
+
+const TabNavigator = () => {
+  return (
+    <Tab.Navigator
+    tabBarPosition="bottom"
+    screenOptions={{
+    tabBarActiveTintColor: 'blue',
+    tabBarInactiveTintColor: 'green',
+    tabBarPressColor: 'blue'
+    }}>
+      <Tab.Screen name="Todo" component={Todo} />
+      <Tab.Screen name="Budget" component={Budget} />
+      <Tab.Screen name="Calendar" component={Calendar} />
+    </Tab.Navigator>
   )
 }
