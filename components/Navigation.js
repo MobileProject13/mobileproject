@@ -7,6 +7,7 @@ import Calendar from "../screens/Calendar"
 import Landing from "../screens/Landing"
 import Register from "../screens/Register"
 import Login from "../screens/Login"
+import Profile from "../screens/Profile"
 import { useState, useEffect } from "react";
 import React from "react";
 import { onAuthStateChanged } from "firebase/auth";
@@ -39,14 +40,17 @@ export default function Navigation() {
       <Stack.Navigator> 
       {!isLoggedIn ? (
         <>  
-        <Stack.Screen name="Welcome" component={Landing} options={{ headerShown: false }} />
-        <Stack.Screen name="Register" component={Register} options={{ headerShown: false }} />
-        <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
+          <Stack.Screen name="Welcome" component={Landing} options={{ headerShown: false }} />
+          <Stack.Screen name="Register" component={Register} options={{ headerShown: false }} />
+          <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
         </>  
         ) : (
-       <Stack.Screen name="TabNav" component={TabNavigator} options={{ headerShown: false }} />
+        <>
+          <Stack.Screen name="TabNav" component={TabNavigator} options={{ headerShown: false }} />
+          <Stack.Screen name="Profile" component={Profile}  />
+        </>
         )}
-        </Stack.Navigator>
+      </Stack.Navigator>
     </NavigationContainer>
   )
 }

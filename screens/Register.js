@@ -80,7 +80,7 @@ export default function Register({ navigation }) {
         // } else {
             return(
                 <View style={styles.container}>
-                    <Text style={styles.header}>Todos: Register</Text>
+                    <Text style={styles.header}>Register</Text>
                     <Text style={styles.infoText}>Create an account</Text>
                     <View style={styles.newItem}>
                         <Text style={styles.infoText}>Nickname</Text>

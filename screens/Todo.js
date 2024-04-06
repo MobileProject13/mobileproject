@@ -15,7 +15,7 @@ import { db, TODOS_REF, USERS_REF } from '../firebase/Config';
 import { auth } from '../firebase/Config';
 import { logout } from '../components/Auth';
 import { onAuthStateChanged } from 'firebase/auth';
-import { MaterialIcons } from '@expo/vector-icons';
+import { MaterialIcons, FontAwesome } from '@expo/vector-icons';
 import style from "../styles/Styles"
 import { TodoItem } from '../components/TodoItem';
 
@@ -99,6 +99,10 @@ export default function Todos({ navigation }) {
    // navigation.navigate('Login')
   }
 
+  const handlePressProfile = () => {
+    navigation.navigate('Profile')
+  }
+
   let todosKeys = Object.keys(todos)
 
   // if (!isLoggedIn) {
@@ -123,6 +127,9 @@ export default function Todos({ navigation }) {
   return (
     <View style={style.container}>
       <View style={style.headerItem}>
+      <Pressable style={style.logoutButton} onPress={handlePressProfile}>
+      <FontAwesome name="user-circle-o" size={24} color="black" />
+      </Pressable>
       <Text style={style.header}>My todolist ({todosKeys.length})</Text>
       <Pressable style={style.logoutButton} onPress={handlePressLogout}>
         <MaterialIcons name='logout' size={24} color='black'/>
