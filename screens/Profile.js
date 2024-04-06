@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react"
 import { Button, Text, View, Pressable, Alert, TextInput } from "react-native"
 import { onAuthStateChanged } from "firebase/auth"
-import { logout, changePassword, removeUser } from "../components/Auth"
+import { logout, changePassword, removeUser, updateEmailAddress } from "../components/Auth"
 import styles from "../styles/Styles"
 import { MaterialIcons } from '@expo/vector-icons'
 import { auth, db, USERS_REF } from "../firebase/Config"
-import { collection, getDoc, updateDoc } from "firebase/firestore"
+import { collection, doc, getDoc, updateDoc } from "firebase/firestore"
 
 
-export default function MyAccount({navigation}) {
+export default function Profile({navigation}) {
 
     const [isLoggedIn, setIsLoggedIn] = useState(false)
     const [email, setEmail] = useState('')    
@@ -19,21 +19,31 @@ export default function MyAccount({navigation}) {
 
     useEffect(() => {
         onAuthStateChanged(auth, async (user) => {
+            console.log("User data:", user);
             if (user) {
+                console.log('user is logged in, Profile.');
                 setIsLoggedIn(true)
-                (async () => {
-                    const docRef = doc(db, USERS_REF, auth.currentUser.uid)
-                    const docSnap = await getDoc(docRef)
+                try{(async () => {
+                    console.log('Fetching user data from Firestore');
+                    const docRef = doc(db, USERS_REF, auth.currentUser.uid);
+                    const docSnap = await getDoc(docRef);
+                    console.log("Document snapshot:", docSnap)
                     if (docSnap.exists()) {
-                        const userData = docSnap.data()
+                        console.log("Document exists in Firestore");
+                        const userData = docSnap.data();
                         setNickname(userData.nickname)
                         setEmail(userData.email)
+                        console.log(userData, 'userData');
                     } else {
                         console.log('No such document')
                     }
                 })();
+                } catch (error) {
+                    console.log('Error fetching user data:', error)
+                }
             }
             else {
+                console.log('user is not logged in Profile.');
                 setIsLoggedIn(false)
             }
         });
@@ -80,6 +90,7 @@ export default function MyAccount({navigation}) {
         if (!password) {
             Alert.alert('Password cannot be empty.')
         } else if (!confirmPassword) {
+            setPassword('')
             Alert.alert('Confirming password cannot be empty.')
         } else if (password !== confirmPassword) {
             Alert.alert('Passwords do not match.')
@@ -97,42 +108,42 @@ export default function MyAccount({navigation}) {
         } else {
             removeUser()
             setConfirmDelete('')
-            navigation.navigate('Login')
         }
     }
 
     const handlePressLogout = async () => {
         logout()
-        navigation.navigate('Login')
     }
 
-    if (!isLoggedIn) {
-        return(
-            <View style={styles.container}>
-                <View style={styles.headerItem}>
-                <Text style={styles.header}>Todos: My Account</Text>
-                </View>
-                <Text style={styles.infoText}>Login to your account.</Text>
-                <Pressable style={styles.buttonStyle}>
-                    <Button 
-                    title="Login" 
-                    onPress={() => navigation.navigate('Login')} />
-                </Pressable>
-                <Text style={styles.infoText}>Don't have an account?</Text>
-                <Pressable style={styles.buttonStyle}>
-                    <Button 
-                    title="Register" 
-                    onPress={() => navigation.navigate('Register')} />
-                </Pressable>
-        </View>                
-        )
-    } else {
+    
+
+    // if (!isLoggedIn) {
+    //     return(
+    //         <View style={styles.container}>
+    //             <View style={styles.headerItem}>
+    //             <Text style={styles.header}>Todos: My Account</Text>
+    //             </View>
+    //             <Text style={styles.infoText}>Login to your account.</Text>
+    //             <Pressable style={styles.buttonStyle}>
+    //                 <Button 
+    //                 title="Login" 
+    //                 onPress={() => navigation.navigate('Login')} />
+    //             </Pressable>
+    //             <Text style={styles.infoText}>Don't have an account?</Text>
+    //             <Pressable style={styles.buttonStyle}>
+    //                 <Button 
+    //                 title="Register" 
+    //                 onPress={() => navigation.navigate('Register')} />
+    //             </Pressable>
+    //     </View>                
+    //     )
+    // } else {
     return (
         <View style={styles.container}>
             <View style={styles.headerItem}>
-                <Text style={styles.header}>Todos: My Account</Text>
+                <Text style={styles.header}>Todos: My Profile</Text>
             </View>
-            <Text style={styles.infoText}>You are logged in.</Text>
+            <Text style={styles.infoText}>Account: {email}</Text>
             <Pressable style={styles.buttonStyle} onPress={handlePressLogout}>
                 <MaterialIcons name="logout" size={24} color="black" />
             </Pressable>
@@ -143,6 +154,12 @@ export default function MyAccount({navigation}) {
             style={styles.textInput}
             onChangeText={setNickname}
             />
+            {/* <Text style={styles.infoText}>Email</Text>
+            <TextInput
+            value={email}
+            style={styles.textInput}
+            onChangeText={setEmail}
+            /> */}
             <View style={styles.buttonStyle}>
                 <Button 
                 title="Update account" 
@@ -186,4 +203,4 @@ export default function MyAccount({navigation}) {
         </View>
     )
 }
-}
+// }

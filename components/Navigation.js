@@ -25,8 +25,7 @@ export default function Navigation() {
     onAuthStateChanged(auth, (user) => {
         if (user) {
             setIsLoggedIn(true)
-            console.log("User is signed in in navigation");
-            console.log(user.uid);
+            console.log("User is signed in in navigation");                        
         }
         else {
             setIsLoggedIn(false)

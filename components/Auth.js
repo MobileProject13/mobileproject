@@ -11,8 +11,6 @@ import { auth, db, USERS_REF, TODOS_REF } from '../firebase/Config';
 import {  doc, setDoc, collection, deleteDoc, onSnapshot } from 'firebase/firestore';
 import { Alert } from 'react-native';
 
-
-
 export const signUp = async (email, password, nickname) => {
     await createUserWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {

@@ -43,8 +43,8 @@ export default function Register({ navigation }) {
             signUp(email, password, nickname)
             onAuthStateChanged(auth, (user) => {
                 if (user) {
-                    setNickname('')
-                    setEmail('')
+                    // setNickname('')
+                    // setEmail('')
                     setPassword('')
                     setConfirmPassword('')
                    // navigation.navigate('Todos')
