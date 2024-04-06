@@ -13,7 +13,6 @@ import React from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../firebase/Config";
 
-
 const Tab = createMaterialTopTabNavigator()
 const Stack = createStackNavigator();
 
@@ -24,12 +23,10 @@ export default function Navigation() {
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
         if (user) {
-            setIsLoggedIn(true)
-            console.log("User is signed in in navigation");                        
+            setIsLoggedIn(true)                                   
         }
         else {
-            setIsLoggedIn(false)
-            console.log("User is not signed in in navigation");
+            setIsLoggedIn(false)            
         }
     })
 }, []) 

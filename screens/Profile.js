@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from "react"
 import { Button, Text, View, Pressable, Alert, TextInput } from "react-native"
 import { onAuthStateChanged } from "firebase/auth"
-import { logout, changePassword, removeUser, updateEmailAddress } from "../components/Auth"
+import { logout, changePassword, removeUser } from "../components/Auth"
 import styles from "../styles/Styles"
 import { MaterialIcons } from '@expo/vector-icons'
 import { auth, db, USERS_REF } from "../firebase/Config"
 import { collection, doc, getDoc, updateDoc } from "firebase/firestore"
-
 
 export default function Profile({navigation}) {
 
@@ -18,22 +17,16 @@ export default function Profile({navigation}) {
     const [confirmDelete, setConfirmDelete] = useState('')
 
     useEffect(() => {
-        onAuthStateChanged(auth, async (user) => {
-            console.log("User data:", user);
-            if (user) {
-                console.log('user is logged in, Profile.');
+        onAuthStateChanged(auth, async (user) => {            
+            if (user) {                
                 setIsLoggedIn(true)
-                try{(async () => {
-                    console.log('Fetching user data from Firestore');
+                try{(async () => {                    
                     const docRef = doc(db, USERS_REF, auth.currentUser.uid);
-                    const docSnap = await getDoc(docRef);
-                    console.log("Document snapshot:", docSnap)
-                    if (docSnap.exists()) {
-                        console.log("Document exists in Firestore");
+                    const docSnap = await getDoc(docRef);                    
+                    if (docSnap.exists()) {                        
                         const userData = docSnap.data();
                         setNickname(userData.nickname)
-                        setEmail(userData.email)
-                        console.log(userData, 'userData');
+                        setEmail(userData.email)                        
                     } else {
                         console.log('No such document')
                     }
@@ -42,33 +35,11 @@ export default function Profile({navigation}) {
                     console.log('Error fetching user data:', error)
                 }
             }
-            else {
-                console.log('user is not logged in Profile.');
+            else {                
                 setIsLoggedIn(false)
             }
         });
     }, []) 
-
-    //     this is function with no email update, check notes for more info
-
-    // const updateUserData = async () => {
-    //     const colRef = collection(db, USERS_REF)
-    //     await updateDoc(doc(colRef, auth.currentUser.uid), {
-    //         email: email,
-    //         nickname: nickname
-    //     })
-    //     .then(() => {
-    //         if (email !== auth.currentUser.email) {
-    //             updateEmailAddress(email)
-    //         }
-    //         Alert.alert('Account successfully updated.')
-    //         console.log('Account successfully updated.')
-    //     })
-    //     .catch((error) => {
-    //         console.log('Error updating account:', error)
-    //         Alert.alert('Error updating account:', error)
-    //     })
-    // }
 
 
     const updateUserData = async () => {
@@ -113,35 +84,21 @@ export default function Profile({navigation}) {
 
     const handlePressLogout = async () => {
         logout()
-    }
+    }    
 
-    
-
-    // if (!isLoggedIn) {
-    //     return(
-    //         <View style={styles.container}>
-    //             <View style={styles.headerItem}>
-    //             <Text style={styles.header}>Todos: My Account</Text>
-    //             </View>
-    //             <Text style={styles.infoText}>Login to your account.</Text>
-    //             <Pressable style={styles.buttonStyle}>
-    //                 <Button 
-    //                 title="Login" 
-    //                 onPress={() => navigation.navigate('Login')} />
-    //             </Pressable>
-    //             <Text style={styles.infoText}>Don't have an account?</Text>
-    //             <Pressable style={styles.buttonStyle}>
-    //                 <Button 
-    //                 title="Register" 
-    //                 onPress={() => navigation.navigate('Register')} />
-    //             </Pressable>
-    //     </View>                
-    //     )
-    // } else {
+    if (!isLoggedIn) {
+        return(
+            <View style={styles.container}>
+                <View style={styles.headerItem}>
+                <Text style={styles.header}>Loading..</Text>
+                </View>
+            </View>                
+        )
+    } else {
     return (
         <View style={styles.container}>
             <View style={styles.headerItem}>
-                <Text style={styles.header}>Todos: My Profile</Text>
+                <Text style={styles.header}>My Profile</Text>
             </View>
             <Text style={styles.infoText}>Account: {email}</Text>
             <Pressable style={styles.buttonStyle} onPress={handlePressLogout}>
@@ -154,12 +111,6 @@ export default function Profile({navigation}) {
             style={styles.textInput}
             onChangeText={setNickname}
             />
-            {/* <Text style={styles.infoText}>Email</Text>
-            <TextInput
-            value={email}
-            style={styles.textInput}
-            onChangeText={setEmail}
-            /> */}
             <View style={styles.buttonStyle}>
                 <Button 
                 title="Update account" 
@@ -203,4 +154,4 @@ export default function Profile({navigation}) {
         </View>
     )
 }
-// }
+}
