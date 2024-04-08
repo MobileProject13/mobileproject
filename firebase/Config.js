@@ -3,7 +3,7 @@ import { initializeApp } from "firebase/app";
 import { getFirestore } from 'firebase/firestore'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { initializeAuth, getReactNativePersistence } from 'firebase/auth'
-import { API_KEY, DOMAIN, PROJECT_ID, BUCKET, SENDER_ID, APP_ID, MEASUREMENT_ID } from "../firebaseconf";
+import { API_KEY, DOMAIN, PROJECT_ID, BUCKET, SENDER_ID, APP_ID } from "../firebaseconf";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -15,8 +15,7 @@ const firebaseConfig = {
   projectId: PROJECT_ID,
   storageBucket: BUCKET,
   messagingSenderId: SENDER_ID,
-  appId: APP_ID,
-  measurementId: MEASUREMENT_ID
+  appId: APP_ID
 };
 
 // Initialize Firebase
