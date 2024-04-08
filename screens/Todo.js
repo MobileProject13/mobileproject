@@ -105,25 +105,15 @@ export default function Todos({ navigation }) {
 
   let todosKeys = Object.keys(todos)
 
-  // if (!isLoggedIn) {
-  //   return (
-  //     <View style={style.container}>
-  //       <Text style={style.header}>My Todos</Text>
-  //       <Text style={style.infoText}>
-  //         You are not logged in. Login please.
-  //       </Text>
-  //       <Button
-  //       title='Go to login'
-  //       onPress={() => navigation.navigate('Login')}
-  //       />
-  //       <Text style={style.infoText}>Don´t have an account?</Text>
-  //       <Button
-  //       title='Go to register'
-  //       onPress={() => navigation.navigate('Register')}
-  //       />
-  //     </View>
-  //   )
-  // } else {
+  if (!isLoggedIn) {
+    return(
+        <View style={style.container}>
+            <View style={style.headerItem}>
+            <Text style={style.header}>Loading..</Text>
+            </View>
+        </View>                
+    )
+} else {
   return (
     <View style={style.container}>
       <View style={style.headerItem}>
@@ -201,4 +191,4 @@ export default function Todos({ navigation }) {
     </View>
   );
 }
-// }
+}
