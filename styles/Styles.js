@@ -1,10 +1,18 @@
 import { StatusBar, StyleSheet } from "react-native";
-
+import { MD3DarkTheme } from 'react-native-paper';
 
 export default Styles = StyleSheet.create({
     container: {
         flex: 1,
         marginTop: StatusBar.currentHeight + 5,
+        backgroundColor: backgroundcolor
+    },
+    gradientbackground: {
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        top: 0,
+        height: '100%',
     },
     text: {
         textAlign: 'center',
@@ -72,3 +80,27 @@ export default Styles = StyleSheet.create({
         fontSize: 20
       },
 })
+
+const backgroundcolor = '#052939'
+const blue = '#80D4F5'
+const pink = '#F67FD4'
+const green = '#D5F67F'
+const lightcolor = '#F1F3F4'
+
+
+
+export const MyTheme = {
+  ...MD3DarkTheme,
+  roundness: 2,
+  colors: {
+    ...MD3DarkTheme.colors,
+    primary: backgroundcolor, //btn txt,icon color
+    secondaryContainer: pink, //bottomnav active bg, chips bg flat mode, segmentedbtns bg
+    onSecondaryContainer: pink, //selected segmenbtn txt+icon
+    background: backgroundcolor, //app bg color
+    surface: pink, //chips bg outlined mode
+    onSurface: pink, // icon colors, inputText txt color, txt color
+    onSurfaceVariant: pink, //inputtxt label, inactive icons, chips txt, inactive radiobutton
+    outline: pink, //outlines inputtxt, segmentexbtns, chips   
+  }
+} 
