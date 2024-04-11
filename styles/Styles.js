@@ -46,6 +46,13 @@ export default Styles = StyleSheet.create({
     marginbottom: {
       marginBottom: 40
     },
+    marginbottomsmall: {
+      marginBottom: 20
+    },
+    textInput: {
+      width: '80%',
+      paddingVertical: 8,
+    },
     text: {
         textAlign: 'center',
         fontWeight: 'bold',
@@ -70,16 +77,7 @@ export default Styles = StyleSheet.create({
         marginVertical: 10,
         alignItems: 'flex-start',
       },
-      textInput: {
-        borderWidth: 1,
-        borderColor: '#afafaf',
-        width: '90%',
-        borderRadius: 5,
-        paddingHorizontal: 5,
-        paddingVertical: 5,
-        marginVertical: 15,
-        fontSize: 18
-      },
+
       todoItem: {
         flexDirection: 'row',
         marginVertical: 10
@@ -105,10 +103,6 @@ export default Styles = StyleSheet.create({
       },
 })
 
-
-
-
-
 export const MyTheme = {
   ...MD3DarkTheme,
   roundness: 4,
@@ -119,8 +113,8 @@ export const MyTheme = {
     onSecondaryContainer: pink, //selected segmenbtn txt+icon
     background: darkblue, //app bg color
     surface: pink, //chips bg outlined mode
-    onSurface: pink, // icon colors, inputText txt color, txt color
-    onSurfaceVariant: pink, //inputtxt label, inactive icons, chips txt, inactive radiobutton
-    outline: pink, //outlines inputtxt, segmentexbtns, chips   
+    onSurface: lightcolor, // icon colors, inputText txt color, txt color
+    onSurfaceVariant: lightcolor, //inputtxt label, inactive icons, chips txt, inactive radiobutton
+    outline: myblue, //outlines inputtxt, segmentexbtns, chips   
   }
 } 

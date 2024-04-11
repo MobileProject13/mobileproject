@@ -3,8 +3,9 @@ import { auth } from "../firebase/Config"
 import { useEffect, useState } from "react"
 import { logout, login, resetPassword } from "../components/Auth"
 import { Alert, Pressable } from "react-native"
-import { Button, Text, View, TextInput } from "react-native"
-import styles from "../styles/Styles"
+import { Text, View } from "react-native"
+import { Button, TextInput, Icon } from "react-native-paper"
+import style from "../styles/Styles"
 import { MaterialIcons } from '@expo/vector-icons'
 import { LinearGradientBG } from "../components/LinearGradientBG"
 
@@ -64,58 +65,75 @@ export default function Register({ navigation }) {
 
 
             return(
-                <View style={styles.container}>
-                    <LinearGradientBG/>
-                    <Text style={styles.header}>Login</Text>
+                <View style={style.container}>
+                <LinearGradientBG/>
+                    <View style={style.innercontainer}>
+                    <Text style={[style.headerText, style.marginbottom]}>Login</Text>                    
                     
-                    <View style={styles.newItem}>
-                        <Text style={styles.infoText}>Email</Text>
+                        {/* <Text style={style.infoText}>Email</Text> */}
                         <TextInput
-                            style={styles.textInput}
-                            placeholder="Enter your email"
-                            value={email}
+                            mode="outlined"
+                            style={[style.textInput, style.marginbottomsmall]}
+                            label="Enter your email"
+                           // placeholder="Enter your email"
+                            right={<TextInput.Icon icon={() => <MaterialIcons name="email" size={24} color='#D5F67F' />} />}                            value={email}
+                            selectionColor='#F1F3F4'
+                            activeOutlineColor='#D5F67F'
                             onChangeText={(email) => setEmail(email.trim())}
                         />
-                    </View>
-                    <View style={styles.newItem}>
-                        <Text style={styles.infoText}>Password</Text>
+                    
+                    
+                        {/* <Text style={style.infoText}>Password</Text> */}
                         <TextInput
-                            style={styles.textInput}
-                            placeholder="Enter your password"
+                            mode="outlined"
+                            style={[style.textInput, style.marginbottomsmall]}
+                            label="Enter your password"
+                            right={<TextInput.Icon icon={() => <MaterialIcons name="lock" size={24} color='#D5F67F' />} />}
                             value={password}
+                            selectionColor='#F1F3F4'
+                            activeOutlineColor='#D5F67F'
                             onChangeText={(password) => setPassword(password)}
-                            secureTextEntry={true}
+                            secureTextEntry={true}                            
                         />
-                    </View>
+                    
                     <Button
-                        style={styles.buttonStyle}
-                        title="Log in"
-                        onPress={handlePressLogin}
-                    />
-                    <Text style={styles.infoText}>Not having account yet?</Text>
+                    textColor= '#F1F3F4'
+                    style={style.buttonsWide}
+                    mode='contained'
+                    onPress={handlePressLogin}
+                    >
+                    LOGIN
+                    <Icon color='#D5F67F' source='login' size={24}/>
+                    </Button> 
+                    <Text style={style.infoText}>Not having account yet?</Text>
                     <Button
-                        style={styles.buttonStyle}
-                        title="Register"
-                        onPress={() => navigation.navigate('Register')}
-                    />
-                    <Pressable style={styles.buttonStyle} onPress={handlePressForgotPw}>
-                        <Text style={styles.infoText}>Forgot password?</Text>
+                    textColor= '#F1F3F4'
+                    style={style.buttonsWide}
+                    mode='contained'
+                    onPress={() => navigation.navigate('Register')}
+                    >
+                    REGISTER
+                    <Icon color='#D5F67F' source='account-plus' size={24}/>
+                    </Button> 
+                    <Pressable style={style.buttonStyle} onPress={handlePressForgotPw}>
+                        <Text style={style.infoText}>Forgot password?</Text>
                     </Pressable>
                     {showForgotPw && 
                     <>
                     <TextInput
-                        style={styles.textInput}
+                        style={style.textInput}
                         placeholder="Enter your email"
                         value={emailForgotPw}
                         onChangeText={(emailForgotPw) => setEmailForgotPw(emailForgotPw)}
                         keyboardType="email-address"
                         autoCapitalize="none"
                     />
-                    <Pressable style={styles.buttonStyle} onPress={()=>handlePressResetPw()}>
-                        <Text style={styles.infoText}>Reset password. Check you spam folder too after resetting.</Text>
+                    <Pressable style={style.buttonStyle} onPress={()=>handlePressResetPw()}>
+                        <Text style={style.infoText}>Reset password. Check you spam folder too after resetting.</Text>
                     </Pressable>
                     </>
                     }
+                </View>
                 </View>
             )
         }

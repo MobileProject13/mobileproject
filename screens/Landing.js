@@ -16,6 +16,7 @@ export default function Landing ({ navigation }) {
             Login please.
           </Text>    
           <Button
+          icon='login'
           textColor= '#F1F3F4'
           style={style.buttonsWide}
           mode='contained'
@@ -25,6 +26,7 @@ export default function Landing ({ navigation }) {
           </Button>
           <Text style={style.infoText}>Don´t have an account?</Text>
           <Button
+          icon='account-plus'
           textColor= '#F1F3F4'
           style={style.buttonsWide}
           mode='contained'
