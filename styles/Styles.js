@@ -58,6 +58,7 @@ export default Styles = StyleSheet.create({
         fontWeight: 'bold',
         fontSize: 20,
         marginTop: 20,
+        color: lightcolor
     },
     todosContainer: {
         flexShrink: 1,

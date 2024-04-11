@@ -1,11 +1,13 @@
-import { StyleSheet, Text, View } from 'react-native';
-import Styles from "../styles/Styles"
+import { Text, View } from 'react-native';
+import style from "../styles/Styles"
+import { LinearGradientBG } from '../components/LinearGradientBG';
 
 
 export default function Budget() {
     return (
-        <View style={Styles.container}>
-            <Text style={Styles.text}>Budget comes here</Text>
+        <View style={style.container}>
+            <LinearGradientBG />
+            <Text style={style.text}>Budget comes here</Text>
         </View>
         )
 }

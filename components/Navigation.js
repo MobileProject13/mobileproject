@@ -12,6 +12,7 @@ import { useState, useEffect } from "react";
 import React from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../firebase/Config";
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const Tab = createMaterialTopTabNavigator()
 const Stack = createStackNavigator();
@@ -56,11 +57,20 @@ const TabNavigator = () => {
     <Tab.Navigator
     tabBarPosition="bottom"
     screenOptions={{
-    tabBarActiveTintColor: 'blue',
-    tabBarInactiveTintColor: 'green',
-    tabBarPressColor: 'blue'
+    tabBarActiveTintColor: '#80D4F5',
+    tabBarInactiveTintColor: '#F1F3F4',
+    tabBarPressColor: '#80D4F5',
+    tabBarStyle: { backgroundColor: '#052939' },
+    
     }}>
-      <Tab.Screen name="Todo" component={Todo} />
+      <Tab.Screen 
+      name="Todo" 
+      component={Todo} 
+      options={{
+          tabBarIcon: ({ color }) => (
+            <MaterialCommunityIcons name="format-list-bulleted" color={color} size={24} />
+          ),
+        }}/>
       <Tab.Screen name="Budget" component={Budget} />
       <Tab.Screen name="Calendar" component={Calendar} />
     </Tab.Navigator>

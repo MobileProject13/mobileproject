@@ -1,6 +1,6 @@
 
 import { useEffect, useState } from 'react';
-import { Alert, Button, Pressable, ScrollView, Text, TextInput, View } from 'react-native';
+import { Alert, Button, ScrollView, Text, TextInput, View } from 'react-native';
 import {
   addDoc,
   collection,
@@ -17,7 +17,9 @@ import { logout } from '../components/Auth';
 import { onAuthStateChanged } from 'firebase/auth';
 import { MaterialIcons, FontAwesome } from '@expo/vector-icons';
 import style from "../styles/Styles"
+import { LinearGradientBG } from '../components/LinearGradientBG';
 import { TodoItem } from '../components/TodoItem';
+import { IconButton } from 'react-native-paper';
 
 export default function Todos({ navigation }) {
 
@@ -96,11 +98,6 @@ export default function Todos({ navigation }) {
 
   const handlePressLogout = () => {
     logout()
-   // navigation.navigate('Login')
-  }
-
-  const handlePressProfile = () => {
-    navigation.navigate('Profile')
   }
 
   let todosKeys = Object.keys(todos)
@@ -108,6 +105,7 @@ export default function Todos({ navigation }) {
   if (!isLoggedIn) {
     return(
         <View style={style.container}>
+        <LinearGradientBG/>
             <View style={style.headerItem}>
             <Text style={style.header}>Loading..</Text>
             </View>
@@ -116,14 +114,21 @@ export default function Todos({ navigation }) {
 } else {
   return (
     <View style={style.container}>
+      <LinearGradientBG/>
       <View style={style.headerItem}>
-      <Pressable style={style.logoutButton} onPress={handlePressProfile}>
-      <FontAwesome name="user-circle-o" size={24} color="black" />
-      </Pressable>
+      <IconButton
+        icon="account-circle"
+        iconColor='#F1F3F4'
+        size={40}
+        onPress={() => navigation.navigate('Profile')}
+      />
       <Text style={style.header}>My todolist ({todosKeys.length})</Text>
-      <Pressable style={style.logoutButton} onPress={handlePressLogout}>
-        <MaterialIcons name='logout' size={24} color='black'/>
-      </Pressable>
+      <IconButton
+        icon="logout"
+        iconColor='#F1F3F4'
+        size={24}
+        onPress={handlePressLogout}
+      />
       </View>
       <View style={style.newItem}>
         <TextInput 
