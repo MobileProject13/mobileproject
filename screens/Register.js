@@ -2,9 +2,9 @@ import { onAuthStateChanged } from "firebase/auth"
 import { auth } from "../firebase/Config"
 import { useEffect, useState } from "react"
 import { logout, signUp } from "../components/Auth"
-import { Alert, Pressable, ScrollView } from "react-native"
+import { Alert, ScrollView } from "react-native"
 import { Text, View, } from "react-native"
-import { Button, TextInput, Icon } from "react-native-paper"
+import { Button, TextInput } from "react-native-paper"
 import style from "../styles/Styles"
 import { MaterialIcons } from '@expo/vector-icons'
 import { LinearGradientBG } from "../components/LinearGradientBG"
@@ -67,27 +67,29 @@ export default function Register({ navigation }) {
                     <Text style={[style.headerText, style.marginbottom, {marginTop:40}]}>Register</Text>
                     <Text style={style.infoText}>Create an account</Text>
 
-                        <TextInput
-                            mode="outlined"
-                            style={[style.textInput, style.marginbottomsmall]}
-                            label="Enter your nickname"                                                   
-                            right={<TextInput.Icon icon={() => <MaterialIcons name="edit" size={24} color='#D5F67F' />} />}                            value={email}
-                            selectionColor='#F1F3F4'
-                            activeOutlineColor='#D5F67F'
-                            onChangeText={(nickname) => setNickname(nickname.trim())}
-                        />                     
+                    <TextInput
+                        mode="outlined"
+                        style={[style.textInput, style.marginbottomsmall]}
+                        label="Enter your nickname"                                                   
+                        right={<TextInput.Icon icon={() => <MaterialIcons name="edit" size={24} color='#D5F67F' />} />}                            
+                        value={nickname}
+                        selectionColor='#F1F3F4'
+                        activeOutlineColor='#D5F67F'
+                        onChangeText={(nickname) => setNickname(nickname.trim())}
+                    />                     
                 
                         {/* <Text style={style.infoText}>Email</Text> */}
 
                         <TextInput
                             mode="outlined"
                             style={[style.textInput, style.marginbottomsmall]}
-                            label="Enter your email"                                                     
-                            right={<TextInput.Icon icon={() => <MaterialIcons name="email" size={24} color='#D5F67F' />} />}                            value={email}
+                            label="Enter your email"
+                            value={email}                                                     
+                            right={<TextInput.Icon icon={() => <MaterialIcons name="email" size={24} color='#D5F67F' />} />}                            
                             selectionColor='#F1F3F4'
                             activeOutlineColor='#D5F67F'
                             onChangeText={(email) => setEmail(email.trim())}
-                        />                   
+                        />                  
                     
                         {/* <Text style={style.infoText}>Password</Text> */}
 
