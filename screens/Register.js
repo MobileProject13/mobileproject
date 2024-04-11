@@ -2,10 +2,12 @@ import { onAuthStateChanged } from "firebase/auth"
 import { auth } from "../firebase/Config"
 import { useEffect, useState } from "react"
 import { logout, signUp } from "../components/Auth"
-import { Alert, Pressable } from "react-native"
-import { Button, Text, View, TextInput } from "react-native"
-import styles from "../styles/Styles"
+import { Alert, Pressable, ScrollView } from "react-native"
+import { Text, View, } from "react-native"
+import { Button, TextInput, Icon } from "react-native-paper"
+import style from "../styles/Styles"
 import { MaterialIcons } from '@expo/vector-icons'
+import { LinearGradientBG } from "../components/LinearGradientBG"
 
 
 export default function Register({ navigation }) {
@@ -57,81 +59,85 @@ export default function Register({ navigation }) {
             logout()
         }
 
-        // if (isLoggedIn) {
-        //     return(
-        //         <View style={styles.container}>
-        //             <View style={styles.headerItem}>
-        //             <Text style={styles.header}>Todos: Register</Text>
-        //             <Pressable style={styles.logoutIcon} onPress={handlePressLogout}>
-        //                 <MaterialIcons name="logout" size={24} color="black" />
-        //             </Pressable>
-        //         </View>
-        //         <Text style={styles.infoText}>You are already logged in.</Text>
-        //         <Button
-        //             title='Go to todos'
-        //             onPress={() => navigation.navigate('Todos')}
-        //         />
-        //         <Button
-        //             title='Go to my account'
-        //             onPress={() => navigation.navigate('MyAccount')}
-        //         />
-        //     </View>                
-        //     )
-        // } else {
             return(
-                <View style={styles.container}>
-                    <Text style={styles.header}>Register</Text>
-                    <Text style={styles.infoText}>Create an account</Text>
-                    <View style={styles.newItem}>
-                        <Text style={styles.infoText}>Nickname</Text>
+                <View style={style.container}>
+                    <LinearGradientBG/>
+                    <ScrollView >
+                    <View style={style.innercontainer}>
+                    <Text style={[style.headerText, style.marginbottom, {marginTop:40}]}>Register</Text>
+                    <Text style={style.infoText}>Create an account</Text>
+
                         <TextInput
-                            style={styles.textInput}
-                            placeholder="Enter your nickname"
-                            value={nickname}
+                            mode="outlined"
+                            style={[style.textInput, style.marginbottomsmall]}
+                            label="Enter your nickname"                                                   
+                            right={<TextInput.Icon icon={() => <MaterialIcons name="edit" size={24} color='#D5F67F' />} />}                            value={email}
+                            selectionColor='#F1F3F4'
+                            activeOutlineColor='#D5F67F'
                             onChangeText={(nickname) => setNickname(nickname.trim())}
-                        />
-                    </View>
-                    <View style={styles.newItem}>
-                        <Text style={styles.infoText}>Email</Text>
+                        />                     
+                
+                        {/* <Text style={style.infoText}>Email</Text> */}
+
                         <TextInput
-                            style={styles.textInput}
-                            placeholder="Enter your email"
-                            value={email}
+                            mode="outlined"
+                            style={[style.textInput, style.marginbottomsmall]}
+                            label="Enter your email"                                                     
+                            right={<TextInput.Icon icon={() => <MaterialIcons name="email" size={24} color='#D5F67F' />} />}                            value={email}
+                            selectionColor='#F1F3F4'
+                            activeOutlineColor='#D5F67F'
                             onChangeText={(email) => setEmail(email.trim())}
-                        />
-                    </View>
-                    <View style={styles.newItem}>
-                        <Text style={styles.infoText}>Password</Text>
-                        <TextInput
-                            style={styles.textInput}
-                            placeholder="Enter your password"
+                        />                   
+                    
+                        {/* <Text style={style.infoText}>Password</Text> */}
+
+                         <TextInput
+                            mode="outlined"
+                            style={[style.textInput, style.marginbottomsmall]}
+                            label="Enter your password"
+                            right={<TextInput.Icon icon={() => <MaterialIcons name="lock" size={24} color='#D5F67F' />} />}
                             value={password}
+                            selectionColor='#F1F3F4'
+                            activeOutlineColor='#D5F67F'
                             onChangeText={(password) => setPassword(password)}
-                            secureTextEntry={true}
-                        />
-                    </View>
-                    <View style={styles.newItem}>
-                        <Text style={styles.infoText}>Confirm Password</Text>
+                            secureTextEntry={true}                            
+                        />                    
+                    
+                        {/* <Text style={style.infoText}>Confirm Password</Text> */}
+
                         <TextInput
-                            style={styles.textInput}
-                            placeholder="Confirm your password"
+                            mode="outlined"
+                            style={[style.textInput, style.marginbottomsmall]}
+                            label="Confirm your password"
+                            right={<TextInput.Icon icon={() => <MaterialIcons name="lock" size={24} color='#D5F67F' />} />}
                             value={confirmPassword}
+                            selectionColor='#F1F3F4'
+                            activeOutlineColor='#D5F67F'
                             onChangeText={(confirmPassword) => setConfirmPassword(confirmPassword)}
-                            secureTextEntry={true}
+                            secureTextEntry={true}                            
                         />
-                    </View>
+                    
                     <Button
-                        style={styles.buttonStyle}
-                        title="Register"
+                        icon='account-plus'
+                        textColor= '#F1F3F4'
+                        style={style.buttonsWide}
+                        mode='contained'
                         onPress={handlePressRegister}
-                    />
-                    <Text style={styles.infoText}>Already have an account?</Text>
+                        >
+                        REGISTER
+                    </Button>
+                    <Text style={style.infoText}>Already have an account?</Text>
                     <Button
-                        style={styles.buttonStyle}
-                        title="Login"
+                        icon='login'
+                        textColor= '#F1F3F4'
+                        style={style.buttonsWide}
+                        mode='contained'
                         onPress={() => navigation.navigate('Login')}
-                    />
+                        >
+                        LOGIN
+                    </Button>
                 </View>
+                </ScrollView>
+            </View>
             )
         }
-// }

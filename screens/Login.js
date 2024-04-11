@@ -74,14 +74,12 @@ export default function Register({ navigation }) {
                         <TextInput
                             mode="outlined"
                             style={[style.textInput, style.marginbottomsmall]}
-                            label="Enter your email"
-                           // placeholder="Enter your email"
+                            label="Enter your email"                                                     
                             right={<TextInput.Icon icon={() => <MaterialIcons name="email" size={24} color='#D5F67F' />} />}                            value={email}
                             selectionColor='#F1F3F4'
                             activeOutlineColor='#D5F67F'
                             onChangeText={(email) => setEmail(email.trim())}
-                        />
-                    
+                        />                    
                     
                         {/* <Text style={style.infoText}>Password</Text> */}
                         <TextInput
@@ -97,23 +95,23 @@ export default function Register({ navigation }) {
                         />
                     
                     <Button
+                    icon='login'
                     textColor= '#F1F3F4'
                     style={style.buttonsWide}
                     mode='contained'
                     onPress={handlePressLogin}
                     >
-                    LOGIN
-                    <Icon color='#D5F67F' source='login' size={24}/>
+                    LOGIN                    
                     </Button> 
                     <Text style={style.infoText}>Not having account yet?</Text>
                     <Button
+                    icon='account-plus'
                     textColor= '#F1F3F4'
                     style={style.buttonsWide}
                     mode='contained'
                     onPress={() => navigation.navigate('Register')}
                     >
                     REGISTER
-                    <Icon color='#D5F67F' source='account-plus' size={24}/>
                     </Button> 
                     <Pressable style={style.buttonStyle} onPress={handlePressForgotPw}>
                         <Text style={style.infoText}>Forgot password?</Text>
