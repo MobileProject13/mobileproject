@@ -6,6 +6,7 @@ import { Alert, Pressable } from "react-native"
 import { Button, Text, View, TextInput } from "react-native"
 import styles from "../styles/Styles"
 import { MaterialIcons } from '@expo/vector-icons'
+import { LinearGradientBG } from "../components/LinearGradientBG"
 
 
 export default function Register({ navigation }) {
@@ -61,29 +62,10 @@ export default function Register({ navigation }) {
         logout()
     }
 
-        // if (isLoggedIn) {
-        //     return(
-        //         <View style={styles.container}>
-        //             <View style={styles.headerItem}>
-        //             <Text style={styles.header}>Todos: Login</Text>
-        //             <Pressable style={styles.logoutIcon} onPress={handlePressLogout}>
-        //                 <MaterialIcons name="logout" size={24} color="black" />
-        //             </Pressable>
-        //         </View>
-        //         <Text style={styles.infoText}>You are logged in.</Text>
-        //         <Button
-        //             title='Go to todos'
-        //             onPress={() => navigation.navigate('Todo')}
-        //         />
-        //         <Button
-        //             title='Go to my account'
-        //             onPress={() => navigation.navigate('MyAccount')}
-        //         />
-        //     </View>                
-        //     )
-        // } else {
+
             return(
                 <View style={styles.container}>
+                    <LinearGradientBG/>
                     <Text style={styles.header}>Login</Text>
                     
                     <View style={styles.newItem}>
@@ -137,4 +119,3 @@ export default function Register({ navigation }) {
                 </View>
             )
         }
-// }

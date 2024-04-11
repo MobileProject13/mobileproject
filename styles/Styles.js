@@ -1,11 +1,17 @@
 import { StatusBar, StyleSheet } from "react-native";
 import { MD3DarkTheme } from 'react-native-paper';
 
+const darkblue = '#052939'
+const myblue = '#80D4F5'
+const pink = '#F67FD4'
+const green = '#D5F67F'
+const lightcolor = '#F1F3F4'
+
 export default Styles = StyleSheet.create({
     container: {
         flex: 1,
         marginTop: StatusBar.currentHeight + 5,
-        backgroundColor: backgroundcolor
+        //backgroundColor: darkblue
     },
     gradientbackground: {
         position: 'absolute',
@@ -13,6 +19,32 @@ export default Styles = StyleSheet.create({
         right: 0,
         top: 0,
         height: '100%',
+    },
+    innercontainer: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+  },
+    buttonsWide: {
+      width: '80%',
+      borderColor: myblue,
+      borderWidth: 2,
+      marginTop: 10,
+      marginBottom: 10,
+    },
+    headerText: {
+      fontSize: 50,
+      color: lightcolor,
+      fontWeight: 'bold'
+    },
+    infoText: {
+      marginTop: 5,
+      marginBottom: 5,
+      fontSize: 15,
+      color: lightcolor,
+    },
+    marginbottom: {
+      marginBottom: 40
     },
     text: {
         textAlign: 'center',
@@ -37,14 +69,6 @@ export default Styles = StyleSheet.create({
       newItem: {
         marginVertical: 10,
         alignItems: 'flex-start',
-      },
-      infoText: {
-        marginTop: 5,
-        marginBottom: 5,
-        fontSize: 15
-      },
-      buttonStyle: {
-        width: '90%'
       },
       textInput: {
         borderWidth: 1,
@@ -81,23 +105,19 @@ export default Styles = StyleSheet.create({
       },
 })
 
-const backgroundcolor = '#052939'
-const blue = '#80D4F5'
-const pink = '#F67FD4'
-const green = '#D5F67F'
-const lightcolor = '#F1F3F4'
+
 
 
 
 export const MyTheme = {
   ...MD3DarkTheme,
-  roundness: 2,
+  roundness: 4,
   colors: {
     ...MD3DarkTheme.colors,
-    primary: backgroundcolor, //btn txt,icon color
+    primary: darkblue, //btn txt,icon color
     secondaryContainer: pink, //bottomnav active bg, chips bg flat mode, segmentedbtns bg
     onSecondaryContainer: pink, //selected segmenbtn txt+icon
-    background: backgroundcolor, //app bg color
+    background: darkblue, //app bg color
     surface: pink, //chips bg outlined mode
     onSurface: pink, // icon colors, inputText txt color, txt color
     onSurfaceVariant: pink, //inputtxt label, inactive icons, chips txt, inactive radiobutton
