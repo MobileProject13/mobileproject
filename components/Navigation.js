@@ -57,11 +57,10 @@ const TabNavigator = () => {
     <Tab.Navigator
     tabBarPosition="bottom"
     screenOptions={{
-    tabBarActiveTintColor: '#80D4F5',
-    tabBarInactiveTintColor: '#F1F3F4',
+    tabBarActiveTintColor: '#F1F3F4',
+    tabBarInactiveTintColor: '#80D4F5',
     tabBarPressColor: '#80D4F5',
-    tabBarStyle: { backgroundColor: '#052939' },
-    
+    tabBarStyle: { backgroundColor: '#052939' },    
     }}>
       <Tab.Screen 
       name="Todo" 
@@ -71,8 +70,22 @@ const TabNavigator = () => {
             <MaterialCommunityIcons name="format-list-bulleted" color={color} size={24} />
           ),
         }}/>
-      <Tab.Screen name="Budget" component={Budget} />
-      <Tab.Screen name="Calendar" component={Calendar} />
+      <Tab.Screen 
+      name="Budget" 
+      component={Budget} 
+      options={{
+        tabBarIcon: ({ color }) => (
+          <MaterialCommunityIcons name="currency-eur" color={color} size={24} />
+        ),
+      }}/>
+      <Tab.Screen 
+      name="Calendar" 
+      component={Calendar}
+      options={{
+        tabBarIcon: ({ color }) => (
+          <MaterialCommunityIcons name="calendar" color={color} size={24} />
+        ),
+      }} />
     </Tab.Navigator>
   )
 }
