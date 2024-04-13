@@ -19,7 +19,7 @@ import { MaterialIcons, FontAwesome } from '@expo/vector-icons';
 import style from "../styles/Styles"
 import { LinearGradientBG } from '../components/LinearGradientBG';
 import { TodoItem } from '../components/TodoItem';
-import { IconButton } from 'react-native-paper';
+import { IconButton, Divider } from 'react-native-paper';
 import { AddNewToBuIcon } from '../components/AddNewToBuIcon';
 import { AddNewTodoModal } from '../components/AddNewTodoModal';
 
@@ -165,9 +165,10 @@ export default function Todos({ navigation }) {
         title='remove all todos'
         onPress={() => createTwoButtonAlert()}
         />
-      </View>
+      </View>      
       <AddNewTodoModal isVisible={modalVisible} onClose={()=> setModalVisible(false)} />
-      <AddNewToBuIcon onPress={()=> setModalVisible(true)}/>
+      <Divider style={style.divider}/>
+      <AddNewToBuIcon onPress={()=> setModalVisible(true)}/>      
     </View>
   );
 }

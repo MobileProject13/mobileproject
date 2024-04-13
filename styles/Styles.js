@@ -11,6 +11,7 @@ export default Styles = StyleSheet.create({
     container: {
         flex: 1,
         marginTop: StatusBar.currentHeight + 5,
+        justifyContent: 'space-between'
         //backgroundColor: darkblue
     },
     gradientbackground: {
@@ -63,6 +64,9 @@ export default Styles = StyleSheet.create({
     },
     marginbottomsmall: {
       marginBottom: 20
+    },
+    divider: {
+      marginBottom: 80
     },
     textInput: {
       width: '80%',
