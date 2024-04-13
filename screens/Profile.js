@@ -6,6 +6,7 @@ import styles from "../styles/Styles"
 import { MaterialIcons } from '@expo/vector-icons'
 import { auth, db, USERS_REF } from "../firebase/Config"
 import { collection, doc, getDoc, updateDoc } from "firebase/firestore"
+import { LinearGradientBG } from "../components/LinearGradientBG"
 
 export default function Profile({navigation}) {
 
@@ -89,23 +90,24 @@ export default function Profile({navigation}) {
     if (!isLoggedIn) {
         return(
             <View style={styles.container}>
-                <View style={styles.headerItem}>
-                <Text style={styles.header}>Loading..</Text>
+                <LinearGradientBG/>
+                <View style={styles.innercontainer}>
+                <Text style={styles.h2text}>Loading..</Text>
                 </View>
             </View>                
         )
     } else {
     return (
         <View style={styles.container}>
-            <View style={styles.headerItem}>
-                <Text style={styles.header}>My Profile</Text>
-            </View>
+            <LinearGradientBG/>
+            <View style={styles.innercontainer}>            
+                <Text style={styles.h2text}>My Profile</Text>            
             <Text style={styles.infoText}>Account: {email}</Text>
             <Pressable style={styles.buttonStyle} onPress={handlePressLogout}>
                 <MaterialIcons name="logout" size={24} color="black" />
             </Pressable>
-            <Text style={styles.myAccountSubheader}>Update account</Text>
-            <Text style={styles.infoText}>Nickname</Text>
+            <Text style={styles.infoText}>Update account</Text>
+            <Text style={styles.infoText}>Nickname: {nickname}</Text>
             <TextInput
             value={nickname}
             style={styles.textInput}
@@ -116,7 +118,7 @@ export default function Profile({navigation}) {
                 title="Update account" 
                 onPress={() => updateUserData()} />
             </View>
-            <Text style={styles.myAccountSubheader}>Change password</Text>   
+            <Text style={styles.infoText}>Change password</Text>   
             <TextInput
             value={password}
             style={styles.textInput}
@@ -136,7 +138,7 @@ export default function Profile({navigation}) {
                 title="Change password" 
                 onPress={handlePressChangePw} /> 
             </View>
-            <Text style={styles.myAccountSubheader}>Delete account</Text>
+            <Text style={styles.infoText}>Delete account</Text>
             <TextInput
             value={confirmDelete}
             style={styles.textInput}
@@ -151,6 +153,7 @@ export default function Profile({navigation}) {
                 onPress={() => handlePressDelete()} />
                 <Text style={styles.infoText}>Warning: Your data will be removed from the database.</Text>
             </View>
+        </View>
         </View>
     )
 }
