@@ -32,11 +32,26 @@ export default Styles = StyleSheet.create({
       marginTop: 10,
       marginBottom: 10,
     },
+    buttonSmall: {
+      width: '40%',
+      borderColor: myblue,
+      borderWidth: 2,
+      marginTop: 10,
+      marginBottom: 10,
+    },
     headerText: {
       fontSize: 50,
       color: lightcolor,
       fontWeight: 'bold'
     },
+    h2text: {
+      textAlign: 'center',
+      fontWeight: 'bold',
+      fontSize: 20,
+      marginTop: 20,
+      color: lightcolor,
+      marginBottom: 20
+  },
     infoText: {
       marginTop: 5,
       marginBottom: 5,
@@ -53,18 +68,21 @@ export default Styles = StyleSheet.create({
       width: '80%',
       paddingVertical: 8,
     },
-    text: {
-        textAlign: 'center',
-        fontWeight: 'bold',
-        fontSize: 20,
-        marginTop: 20,
-        color: lightcolor
-    },
     addNewIcon: {
       position: 'absolute', 
       bottom: 0, 
       marginBottom: 5, 
       alignSelf: 'start'
+    },
+    addNewtodoModal: {      
+      backgroundColor:'rgba(5,41,57, 0.7)',
+      borderColor: myblue,
+      borderWidth: 2,
+      borderRadius: 10,
+      width: '90%',
+      alignSelf: 'center',
+      padding: 20,
+      
     },
     todosContainer: {
         flexShrink: 1,
@@ -122,6 +140,7 @@ export const MyTheme = {
     surface: pink, //chips bg outlined mode
     onSurface: lightcolor, // icon colors, inputText txt color, txt color
     onSurfaceVariant: lightcolor, //inputtxt label, inactive icons, chips txt, inactive radiobutton
-    outline: myblue, //outlines inputtxt, segmentexbtns, chips   
+    outline: myblue, //outlines inputtxt, segmentexbtns, chips
+    //backdrop: darkblue, //modal bg   
   }
 } 

@@ -21,7 +21,7 @@ import { LinearGradientBG } from '../components/LinearGradientBG';
 import { TodoItem } from '../components/TodoItem';
 import { Icon, IconButton } from 'react-native-paper';
 import { AddNewToBuIcon } from '../components/AddNewToBuIcon';
-import { AddNewToBuModal } from '../components/AddNewToBuModal';
+import { AddNewTodoModal } from '../components/AddNewTodoModal';
 
 export default function Todos({ navigation }) {
 
@@ -48,21 +48,21 @@ export default function Todos({ navigation }) {
     })    
   }, [])
   
-  const addNewTodo = async () => {
-    try {
-      if (newTodo.trim() !== '') {
-        const subColRef = collection(
-          db, USERS_REF, auth.currentUser.uid, TODOS_REF)
-        await addDoc(subColRef, {
-          done: false,
-          todoItem: newTodo
-        })
-        setNewTodo('')
-      }
-    } catch (error) {
-      console.log(error.message);
-    }
-  }
+  // const addNewTodo = async (newTodo) => {
+  //   try {
+  //     if (newTodo.trim() !== '') {
+  //       const subColRef = collection(
+  //         db, USERS_REF, auth.currentUser.uid, TODOS_REF)
+  //       await addDoc(subColRef, {
+  //         done: false,
+  //         todoItem: newTodo
+  //       })
+  //       setNewTodo('')
+  //     }
+  //   } catch (error) {
+  //     console.log(error.message);
+  //   }
+  // }
 
   const removeTodo = async (id) => {
     try {
@@ -109,8 +109,8 @@ export default function Todos({ navigation }) {
     return(
         <View style={style.container}>
         <LinearGradientBG/>
-            <View style={style.headerItem}>
-            <Text style={style.header}>Loading..</Text>
+            <View style={style.innercontainer}>
+            <Text style={style.h2text}>Loading..</Text>
             </View>
         </View>                
     )
@@ -133,7 +133,7 @@ export default function Todos({ navigation }) {
         onPress={handlePressLogout}
       />
       </View>
-      <View style={style.newItem}>
+      {/* <View style={style.newItem}>
         <TextInput 
         style={style.textInput} 
         placeholder='Add new todo'
@@ -145,7 +145,7 @@ export default function Todos({ navigation }) {
         title='Add new todo item'
         onPress={() => addNewTodo()}
         />
-      </View>
+      </View> */}
       <Text style={style.subheader}>
         UnChecked ({filterTodos(false)})
       </Text>
@@ -196,7 +196,7 @@ export default function Todos({ navigation }) {
         onPress={() => createTwoButtonAlert()}
         />
       </View>
-      <AddNewToBuModal isVisible={modalVisible} onClose={()=> setModalVisible(false)}/>
+      <AddNewTodoModal isVisible={modalVisible} onClose={()=> setModalVisible(false)} />
       <AddNewToBuIcon onPress={()=> setModalVisible(true)}/>
     </View>
   );

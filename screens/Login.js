@@ -74,7 +74,7 @@ export default function Register({ navigation }) {
                         <TextInput
                             mode="outlined"
                             style={[style.textInput, style.marginbottomsmall]}
-                            label="Enter your email"                                                     
+                            label="Enter your email"                                                                                 
                             right={<TextInput.Icon icon={() => <MaterialIcons name="email" size={24} color='#D5F67F' />} />}                            value={email}
                             selectionColor='#F1F3F4'
                             activeOutlineColor='#D5F67F'
