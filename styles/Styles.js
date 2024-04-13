@@ -60,6 +60,12 @@ export default Styles = StyleSheet.create({
         marginTop: 20,
         color: lightcolor
     },
+    addNewIcon: {
+      position: 'absolute', 
+      bottom: 0, 
+      marginBottom: 5, 
+      alignSelf: 'start'
+    },
     todosContainer: {
         flexShrink: 1,
         marginTop: 15,

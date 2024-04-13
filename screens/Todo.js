@@ -19,7 +19,8 @@ import { MaterialIcons, FontAwesome } from '@expo/vector-icons';
 import style from "../styles/Styles"
 import { LinearGradientBG } from '../components/LinearGradientBG';
 import { TodoItem } from '../components/TodoItem';
-import { IconButton } from 'react-native-paper';
+import { Icon, IconButton } from 'react-native-paper';
+import { AddNewToBuIcon } from '../components/AddNewToBuIcon';
 
 export default function Todos({ navigation }) {
 
@@ -193,6 +194,7 @@ export default function Todos({ navigation }) {
         onPress={() => createTwoButtonAlert()}
         />
       </View>
+      <AddNewToBuIcon/>
     </View>
   );
 }
