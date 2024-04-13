@@ -27,28 +27,34 @@ export const AddNewTodoModal = ({isVisible, onClose}) => {
 
     return(
         <Portal>
-            <Modal visible={isVisible} onDismiss={onClose} contentContainerStyle={style.addNewtodoModal} >
+            <Modal 
+                visible={isVisible} 
+                onDismiss={onClose} 
+                contentContainerStyle={style.addNewtodoModal} >
                 <Text style={style.h2text}>Add new Todo</Text>
                 <TextInput
-                mode="outlined"
-                style={[style.textInput, style.marginbottomsmall]}
-                selectionColor='#F1F3F4'
-                activeOutlineColor='#D5F67F'                
-                label='Enter new todo'                
-                value={newTodo}
-                onChangeText={setNewTodo}/>
-
+                    mode="outlined"
+                    style={[style.textInput, style.marginbottomsmall]}
+                    selectionColor='#F1F3F4'
+                    activeOutlineColor='#D5F67F'                
+                    label='Enter new todo'                
+                    value={newTodo}
+                    onChangeText={setNewTodo}/>
                 <View style={{flexDirection: 'row', alignItems: 'center'}}>
                 <Button
-                textColor= '#F1F3F4'
-                style={style.buttonSmall}
-                mode='contained' 
-                onPress={addNewTodo}>Add</Button>
+                    textColor= '#F1F3F4'
+                    style={style.buttonSmall}
+                    mode='contained' 
+                    onPress={addNewTodo}>
+                    Add
+                </Button>
                 <Button
-                textColor= '#F1F3F4'
-                style={style.buttonSmall}
-                mode='contained' 
-                onPress={onClose}>Done</Button>
+                    textColor= '#F1F3F4'
+                    style={style.buttonSmall}
+                    mode='contained' 
+                    onPress={onClose}>
+                    Done
+                </Button>
                 </View>
             </Modal>
         </Portal>

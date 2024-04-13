@@ -1,6 +1,6 @@
 
 import { useEffect, useState } from 'react';
-import { Alert, Button, ScrollView, Text, TextInput, View } from 'react-native';
+import { Alert, Button, ScrollView, Text, View } from 'react-native';
 import {
   addDoc,
   collection,
@@ -19,13 +19,12 @@ import { MaterialIcons, FontAwesome } from '@expo/vector-icons';
 import style from "../styles/Styles"
 import { LinearGradientBG } from '../components/LinearGradientBG';
 import { TodoItem } from '../components/TodoItem';
-import { Icon, IconButton } from 'react-native-paper';
+import { IconButton } from 'react-native-paper';
 import { AddNewToBuIcon } from '../components/AddNewToBuIcon';
 import { AddNewTodoModal } from '../components/AddNewTodoModal';
 
 export default function Todos({ navigation }) {
 
-  const [newTodo, setNewTodo] = useState('')
   const [todos, setTodos] = useState([])
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [modalVisible, setModalVisible] = useState(false)
@@ -47,22 +46,6 @@ export default function Todos({ navigation }) {
       }    
     })    
   }, [])
-  
-  // const addNewTodo = async (newTodo) => {
-  //   try {
-  //     if (newTodo.trim() !== '') {
-  //       const subColRef = collection(
-  //         db, USERS_REF, auth.currentUser.uid, TODOS_REF)
-  //       await addDoc(subColRef, {
-  //         done: false,
-  //         todoItem: newTodo
-  //       })
-  //       setNewTodo('')
-  //     }
-  //   } catch (error) {
-  //     console.log(error.message);
-  //   }
-  // }
 
   const removeTodo = async (id) => {
     try {
@@ -109,9 +92,9 @@ export default function Todos({ navigation }) {
     return(
         <View style={style.container}>
         <LinearGradientBG/>
-            <View style={style.innercontainer}>
+          <View style={style.innercontainer}>
             <Text style={style.h2text}>Loading..</Text>
-            </View>
+          </View>
         </View>                
     )
 } else {
@@ -119,34 +102,21 @@ export default function Todos({ navigation }) {
     <View style={style.container}>
       <LinearGradientBG/>
       <View style={style.headerItem}>
-      <IconButton
-        icon="account-circle"
-        iconColor='#F1F3F4'
-        size={40}
-        onPress={() => navigation.navigate('Profile')}
-      />
-      <Text style={style.header}>My todolist ({todosKeys.length})</Text>
-      <IconButton
-        icon="logout"
-        iconColor='#F1F3F4'
-        size={24}
-        onPress={handlePressLogout}
-      />
-      </View>
-      {/* <View style={style.newItem}>
-        <TextInput 
-        style={style.textInput} 
-        placeholder='Add new todo'
-        value={newTodo}
-        onChangeText={setNewTodo}/>
-      </View>
-      <View style={style.buttonStyle}>
-        <Button
-        title='Add new todo item'
-        onPress={() => addNewTodo()}
+        <IconButton
+          icon="account-circle"
+          iconColor='#F1F3F4'
+          size={40}
+          onPress={() => navigation.navigate('Profile')}
         />
-      </View> */}
-      <Text style={style.subheader}>
+        <Text style={style.h2text}>My todolist ({todosKeys.length})</Text>
+        <IconButton
+          icon="logout"
+          iconColor='#F1F3F4'
+          size={24}
+          onPress={handlePressLogout}
+        />
+      </View>
+      <Text style={style.infoText}>
         UnChecked ({filterTodos(false)})
       </Text>
       <View style={style.todosContainer}>
@@ -168,7 +138,7 @@ export default function Todos({ navigation }) {
           )}
         </ScrollView>
       </View>
-      <Text style={style.subheader}>
+      <Text style={style.infoText}>
         Checked ({filterTodos(true)})
       </Text>
       <View style={style.todosContainer}>
