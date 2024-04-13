@@ -21,12 +21,14 @@ import { LinearGradientBG } from '../components/LinearGradientBG';
 import { TodoItem } from '../components/TodoItem';
 import { Icon, IconButton } from 'react-native-paper';
 import { AddNewToBuIcon } from '../components/AddNewToBuIcon';
+import { AddNewToBuModal } from '../components/AddNewToBuModal';
 
 export default function Todos({ navigation }) {
 
   const [newTodo, setNewTodo] = useState('')
   const [todos, setTodos] = useState([])
   const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [modalVisible, setModalVisible] = useState(false)
 
   useEffect(() => {
     onAuthStateChanged(auth, async (user) => {
@@ -194,7 +196,8 @@ export default function Todos({ navigation }) {
         onPress={() => createTwoButtonAlert()}
         />
       </View>
-      <AddNewToBuIcon/>
+      <AddNewToBuModal isVisible={modalVisible} onClose={()=> setModalVisible(false)}/>
+      <AddNewToBuIcon onPress={()=> setModalVisible(true)}/>
     </View>
   );
 }

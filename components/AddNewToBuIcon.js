@@ -2,7 +2,7 @@ import { View } from 'react-native';
 import { IconButton } from 'react-native-paper';
 import style from '../styles/Styles';
 
-export const AddNewToBuIcon = () => {
+export const AddNewToBuIcon = ({onPress}) => {
 
     return(
         <View style={style.addNewIcon}>
@@ -10,7 +10,7 @@ export const AddNewToBuIcon = () => {
                 icon='plus-circle'
                 iconColor ='#80D4F5'
                 size={50}
-                onPress={() => console.log('Pressed')}
+                onPress={onPress}
             />
         </View>
     )
