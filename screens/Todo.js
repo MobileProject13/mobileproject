@@ -129,6 +129,7 @@ export default function Todos({ navigation }) {
               todoItem={todos[i].todoItem}
               done={todos[i].done}
               todoId={todos[key].id}
+              themeColor={todos[i].themeColor}
               />
             ))
           ) : (
@@ -151,6 +152,7 @@ export default function Todos({ navigation }) {
               todoItem={todos[i].todoItem}
               done={todos[i].done}
               todoId={todos[key].id}
+              themeColor={todos[i].themeColor}
               />
             ))
           ) : (

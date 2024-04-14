@@ -6,13 +6,15 @@ import { db, TODOS_REF, USERS_REF } from '../firebase/Config'
 import { MaterialIcons } from '@expo/vector-icons'
 import EnTypo from '@expo/vector-icons/Entypo'
 import { auth } from '../firebase/Config'
+import { set } from "firebase/database"
 
 const unchecked_background = '#c8e6f1'
 const checked_background = '#e1f1c3'
 
-export const TodoItem = ({todoItem: todoItem, done: done, todoId: todoId}) => {
+export const TodoItem = ({todoItem: todoItem, done: done, todoId: todoId, themeColor: themeColor}) => {
 
     const [doneState, setDone] = useState(done)
+    const [changeThemeColor, setchangeThemeColor] = useState(themeColor)
 
     const onCheck = async() => {
         try {
@@ -27,6 +29,19 @@ export const TodoItem = ({todoItem: todoItem, done: done, todoId: todoId}) => {
         catch (error) {
             console.log(error.message);
         }}
+
+        // const updateThemeColor = async() => {
+        //     try {
+        //         const subColRef = collection(
+        //             db, USERS_REF, auth.currentUser.uid, TODOS_REF
+        //         )
+        //         await updateDoc(doc(subColRef, todoId), {
+        //             themeColor: changeThemeColor
+        //         }) 
+        //     } catch (error) {
+        //         console.log('Themecolor not working', error.message);
+        //     }
+        // }
 
         const onRemove = async() => {
             try {
@@ -54,6 +69,7 @@ export const TodoItem = ({todoItem: todoItem, done: done, todoId: todoId}) => {
             >
               {todoItem}  
             </Text>
+            <MaterialIcons name={'star'} size={32} color={themeColor} />
             {done &&
             <Pressable>
                 <EnTypo name={'trash'} size={32} color={'black'} onPress={onRemove}/>

@@ -4,10 +4,12 @@ import { View } from 'react-native';
 import { useState } from 'react';
 import { addDoc, collection } from 'firebase/firestore';
 import { db, auth, USERS_REF, TODOS_REF } from '../firebase/Config';
+import { set } from 'firebase/database';
 
 export const AddNewTodoModal = ({isVisible, onClose}) => {
 
     const [newTodo, setNewTodo] = useState('')
+    const [themeColor, setThemeColor] = useState('#80D4F5')
 
     const addNewTodo = async () => {
         try {
@@ -16,9 +18,11 @@ export const AddNewTodoModal = ({isVisible, onClose}) => {
               db, USERS_REF, auth.currentUser.uid, TODOS_REF)
             await addDoc(subColRef, {
               done: false,
-              todoItem: newTodo
+              todoItem: newTodo,
+              themeColor: themeColor
             })
             setNewTodo('')
+            setThemeColor('#80D4F5')
           }
         } catch (error) {
           console.log(error.message);
