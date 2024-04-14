@@ -1,16 +1,16 @@
-import { Modal, Portal, Text, Button, TextInput, RadioButton } from 'react-native-paper';
+import { Modal, Portal, Text, Button, TextInput, RadioButton, Icon } from 'react-native-paper';
 import style from '../styles/Styles';
 import { View } from 'react-native';
 import { useState } from 'react';
 import { addDoc, collection } from 'firebase/firestore';
 import { db, auth, USERS_REF, TODOS_REF } from '../firebase/Config';
 import { set } from 'firebase/database';
+import { MaterialIcons } from '@expo/vector-icons'
 
 export const AddNewTodoModal = ({isVisible, onClose}) => {
 
     const [newTodo, setNewTodo] = useState('')
     const [themeColor, setThemeColor] = useState('#80D4F5')
-    const [changeThemeColor, setchangeThemeColor] = useState(themeColor)
     const [isColorModalVisible, setIsColorModalVisible] = useState(false)
 
     const openColorModal = () => {
@@ -19,6 +19,10 @@ export const AddNewTodoModal = ({isVisible, onClose}) => {
 
     const closeColorModal = () => {
       setIsColorModalVisible(false)
+    }
+
+    const selectThemeColor = (color) => {
+      setThemeColor(color)
     }
 
     const addNewTodo = async () => {
@@ -39,19 +43,6 @@ export const AddNewTodoModal = ({isVisible, onClose}) => {
         }
       }
 
-    const updateThemeColor = async() => {
-            try {
-                const subColRef = collection(
-                    db, USERS_REF, auth.currentUser.uid, TODOS_REF
-                )
-                await updateDoc(doc(subColRef, todoId), {
-                    themeColor: changeThemeColor
-                }) 
-            } catch (error) {
-                console.log('Themecolor not working', error.message);
-            }
-        }
-
     return(
         <Portal>
             <Modal 
@@ -65,7 +56,8 @@ export const AddNewTodoModal = ({isVisible, onClose}) => {
                     style={[style.textInput, style.marginbottomsmall]}
                     selectionColor='#F1F3F4'
                     activeOutlineColor='#D5F67F'                
-                    label='Enter new todo'                
+                    label='Enter new todo'
+                    right={<TextInput.Icon icon={() => <MaterialIcons name="star" size={24} color={themeColor} />} />}                
                     value={newTodo}
                     onChangeText={setNewTodo}/>
                 <Button
@@ -74,10 +66,8 @@ export const AddNewTodoModal = ({isVisible, onClose}) => {
                     mode='contained'
                     onPress={openColorModal}
                     > Colors
-                </Button>
-                
-                </View>
-                  
+                </Button>                
+                </View>                  
                 <View style={{flexDirection: 'row', justifyContent: 'space-between',alignItems: 'center'}}>
                 <Button
                     textColor= '#F1F3F4'
@@ -93,17 +83,19 @@ export const AddNewTodoModal = ({isVisible, onClose}) => {
                     onPress={onClose}>
                     Done
                 </Button>
-                </View>
-              
+                </View>              
             </Modal>
-            <ChooseColors visible={isColorModalVisible} onClose={closeColorModal}/> 
+            <ChooseColors visible={isColorModalVisible} onClose={closeColorModal} selectThemeColor={selectThemeColor}/> 
         </Portal>
     )    
 }
 
-const ChooseColors = ({visible, onClose}) => {
+const ChooseColors = ({visible, onClose, selectThemeColor}) => {
 
-    const [colorvalue, setColorValue] = useState('#80D4F5')
+    const handleColorChange = (color) => {
+      selectThemeColor(color)
+      onClose()
+    }
 
     return(
         <Modal
@@ -111,7 +103,7 @@ const ChooseColors = ({visible, onClose}) => {
           onDismiss={onClose}
           contentContainerStyle={{backgroundColor: 'black', padding: 20, borderRadius: 10, width: '80%', alignSelf: 'center'}}          
         >
-          <RadioButton.Group onValueChange={newValue => setColorValue(newValue)} value={colorvalue}>
+          <RadioButton.Group onValueChange={handleColorChange}>
             <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
               <View>
                 <Text>Blue: </Text>
