@@ -56,20 +56,21 @@ export const TodoItem = ({todoItem: todoItem, done: done, todoId: todoId, themeC
         }
 
     return(
-        <View style={style.todoItem}>
+        <View style={[style.todoItem, {borderColor: themeColor}]}>
             <Pressable onPress={onCheck}>
                 {doneState 
-                ? <MaterialIcons name={'check-box'} size={32}/>
-                : <MaterialIcons name={'check-box-outline-blank'} size={32}/>
+                ? <MaterialIcons name={'check-box'} size={32} color={themeColor}/>
+                : <MaterialIcons name={'check-box-outline-blank'} size={32} color={themeColor}/>
                 }
             </Pressable>
             <Text
-            style={{backgroundColor: done ? checked_background : unchecked_background}}
+            //style={{backgroundColor: done ? checked_background : unchecked_background}}
+            style={{color: themeColor, fontSize: 16, width: '80%'}}
             onPress={onCheck}
             >
               {todoItem}  
             </Text>
-            <MaterialIcons name={'star'} size={32} color={themeColor} />
+            <MaterialIcons name={'circle'} size={32} color={themeColor} />
             {done &&
             <Pressable>
                 <EnTypo name={'trash'} size={32} color={'black'} onPress={onRemove}/>

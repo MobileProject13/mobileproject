@@ -1,10 +1,9 @@
-import { Modal, Portal, Text, Button, TextInput, RadioButton, Icon } from 'react-native-paper';
+import { Modal, Portal, Text, Button, TextInput, RadioButton } from 'react-native-paper';
 import style from '../styles/Styles';
 import { View } from 'react-native';
 import { useState } from 'react';
 import { addDoc, collection } from 'firebase/firestore';
 import { db, auth, USERS_REF, TODOS_REF } from '../firebase/Config';
-import { set } from 'firebase/database';
 import { MaterialIcons } from '@expo/vector-icons'
 
 export const AddNewTodoModal = ({isVisible, onClose}) => {
@@ -57,7 +56,7 @@ export const AddNewTodoModal = ({isVisible, onClose}) => {
                     selectionColor='#F1F3F4'
                     activeOutlineColor='#D5F67F'                
                     label='Enter new todo'
-                    right={<TextInput.Icon icon={() => <MaterialIcons name="star" size={24} color={themeColor} />} />}                
+                    right={<TextInput.Icon icon={() => <MaterialIcons name="circle" size={24} color={themeColor} />} />}                
                     value={newTodo}
                     onChangeText={setNewTodo}/>
                 <Button
@@ -65,7 +64,7 @@ export const AddNewTodoModal = ({isVisible, onClose}) => {
                     style={style.buttonSmall}
                     mode='contained'
                     onPress={openColorModal}
-                    > Colors
+                    > <MaterialIcons name="circle" size={16} color={themeColor} /> Color
                 </Button>                
                 </View>                  
                 <View style={{flexDirection: 'row', justifyContent: 'space-between',alignItems: 'center'}}>
@@ -85,7 +84,10 @@ export const AddNewTodoModal = ({isVisible, onClose}) => {
                 </Button>
                 </View>              
             </Modal>
-            <ChooseColors visible={isColorModalVisible} onClose={closeColorModal} selectThemeColor={selectThemeColor}/> 
+            <ChooseColors 
+            visible={isColorModalVisible} 
+            onClose={closeColorModal} 
+            selectThemeColor={selectThemeColor}/> 
         </Portal>
     )    
 }
@@ -101,21 +103,27 @@ const ChooseColors = ({visible, onClose, selectThemeColor}) => {
         <Modal
           visible={visible}
           onDismiss={onClose}
-          contentContainerStyle={{backgroundColor: 'black', padding: 20, borderRadius: 10, width: '80%', alignSelf: 'center'}}          
+          contentContainerStyle={style.chooseColorModal}          
         >
           <RadioButton.Group onValueChange={handleColorChange}>
-            <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-              <View>
-                <Text>Blue: </Text>
-                <RadioButton value="#80D4F5" />
+            <View style={style.chooseColorRadiobuttonscolumn}>
+              <View style={style.chooseColorRadiobuttonsrow}>
+                <RadioButton
+                  uncheckedColor='#80D4F5'
+                  value="#80D4F5" />
+                <Text style={style.chooseColorRadiobuttonsrowText}>Blue </Text>
               </View>
-              <View>
-                <Text>Green: </Text>
-                <RadioButton value='#D5F67F' />
+              <View style={style.chooseColorRadiobuttonsrow}>
+                <RadioButton 
+                  uncheckedColor='#D5F67F'
+                  value='#D5F67F' />
+                <Text style={style.chooseColorRadiobuttonsrowText}>Green </Text>
               </View>
-              <View>
-                <Text>Pink: </Text>
-                <RadioButton value='#F67FD4' />
+              <View style={style.chooseColorRadiobuttonsrow}>
+                <RadioButton
+                  uncheckedColor='#F67FD4' 
+                  value='#F67FD4' />
+                <Text style={style.chooseColorRadiobuttonsrowText}>Pink </Text>
               </View>
             </View>
           </RadioButton.Group>

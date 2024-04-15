@@ -2,7 +2,7 @@ import { StatusBar, StyleSheet } from "react-native";
 import { MD3DarkTheme } from 'react-native-paper';
 
 const darkblue = '#052939'
-const myblue = '#80D4F5'
+const blue = '#80D4F5'
 const pink = '#F67FD4'
 const green = '#D5F67F'
 const lightcolor = '#F1F3F4'
@@ -25,17 +25,17 @@ export default Styles = StyleSheet.create({
       flex: 1,
       justifyContent: 'center',
       alignItems: 'center',
-  },
+    },
     buttonsWide: {
       width: '80%',
-      borderColor: myblue,
+      borderColor: blue,
       borderWidth: 2,
       marginTop: 10,
       marginBottom: 10,
     },
     buttonSmall: {
       width: '40%',
-      borderColor: myblue,
+      borderColor: blue,
       borderWidth: 2,
       marginTop: 10,
       marginBottom: 10,
@@ -52,7 +52,7 @@ export default Styles = StyleSheet.create({
       marginTop: 20,
       color: lightcolor,
       marginBottom: 20
-  },
+    },
     infoText: {
       marginTop: 5,
       marginBottom: 5,
@@ -79,57 +79,69 @@ export default Styles = StyleSheet.create({
       alignSelf: 'start'
     },
     addNewtodoModal: {      
-      backgroundColor:'rgba(5,41,57, 0.7)',
-      borderColor: myblue,
-      borderWidth: 2,
+      backgroundColor:'rgba(5,41,57, 0.7)', //darkblue with opacity
+      borderColor: blue,
+      borderWidth: 1,
       borderRadius: 10,
       width: '90%',
       alignSelf: 'center',
+      padding: 20,      
+    },
+    chooseColorModal: {
+      backgroundColor: darkblue,
+      borderColor: blue,
+      borderWidth: 1,
       padding: 20,
-      
+      borderRadius: 10,
+      alignSelf: 'center'
+    },
+    chooseColorRadiobuttonscolumn: {
+      flexDirection: 'column', 
+      justifyContent: 'space-between'
+    },
+    chooseColorRadiobuttonsrow: {
+      flexDirection: 'row', 
+      justifyContent: 'space-between', 
+      alignItems: 'center'
+    },
+    chooseColorRadiobuttonsrowText: {
+      color: lightcolor,
+      fontSize: 16,
+      width: 50
     },
     todosContainer: {
         flexShrink: 1,
         marginTop: 15,
-        marginBottom: 5
-      },
-      header: {
-        marginTop: 40,
-        fontSize: 30
-      },
-      subheader: {
-        marginTop: 15,
-        fontSize: 16,
-        fontWeight: 'bold'
-      },
-      newItem: {
+        marginBottom: 5,
+        width: '90%',
+        alignSelf: 'center',
+    },
+    newItem: {
         marginVertical: 10,
         alignItems: 'flex-start',
-      },
-
-      todoItem: {
-        flexDirection: 'row',
-        marginVertical: 10
-      },
-      todoText: {
-        fontSize: 18,
-        paddingLeft: 10,
-        color: 'black'
-      },
-      logoutIcon: {
+    },
+    todoItem: {
+      flexDirection: 'row',
+      marginVertical: 5,     
+      backgroundColor: darkblue,
+      padding: 10,
+      borderRadius: 10,
+      borderWidth: 1,        
+    },
+    logoutIcon: {
         position: 'absolute',
         right: 10,
         top: 10
-      },
-      headerItem: {
+    },
+    headerItem: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center'
-      },
-      myAccountSubheader: {
+    },
+    myAccountSubheader: {
         marginTop: 20,
         fontSize: 20
-      },
+    },
 })
 
 export const MyTheme = {
@@ -144,7 +156,7 @@ export const MyTheme = {
     surface: pink, //chips bg outlined mode
     onSurface: lightcolor, // icon colors, inputText txt color, txt color
     onSurfaceVariant: lightcolor, //inputtxt label, inactive icons, chips txt, inactive radiobutton
-    outline: myblue, //outlines inputtxt, segmentexbtns, chips
+    outline: blue, //outlines inputtxt, segmentexbtns, chips
     //backdrop: darkblue, //modal bg   
   }
 } 
