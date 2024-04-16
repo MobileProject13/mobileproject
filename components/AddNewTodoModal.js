@@ -5,12 +5,17 @@ import { useState } from 'react';
 import { addDoc, collection } from 'firebase/firestore';
 import { db, auth, USERS_REF, TODOS_REF } from '../firebase/Config';
 import { MaterialIcons } from '@expo/vector-icons'
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { Calendar } from "react-native-calendars"
+import { set } from 'firebase/database';
 
 export const AddNewTodoModal = ({isVisible, onClose}) => {
 
     const [newTodo, setNewTodo] = useState('')
     const [themeColor, setThemeColor] = useState('#80D4F5')
     const [isColorModalVisible, setIsColorModalVisible] = useState(false)
+    const [isCalendarModalVisible, setIsCalendarModalVisible] = useState(false)
+    const [date, setDate] = useState()
 
     const openColorModal = () => {
       setIsColorModalVisible(true)
@@ -24,6 +29,17 @@ export const AddNewTodoModal = ({isVisible, onClose}) => {
       setThemeColor(color)
     }
 
+    const openCalendarModal = () => {
+      setIsCalendarModalVisible(true)
+    }
+
+    const closeCalendarModal = (day) => {
+      setIsCalendarModalVisible(false)
+      setDate(day)
+    }
+
+    let datePicked = date ? date?.dateString : 'Date'
+
     const addNewTodo = async () => {
         try {
           if (newTodo.trim() !== '') {
@@ -32,10 +48,12 @@ export const AddNewTodoModal = ({isVisible, onClose}) => {
             await addDoc(subColRef, {
               done: false,
               todoItem: newTodo,
-              themeColor: themeColor
+              themeColor: themeColor,
+              todoDate: date
             })
             setNewTodo('')
             setThemeColor('#80D4F5')
+            setDate()
           }
         } catch (error) {
           console.log(error.message);
@@ -59,14 +77,25 @@ export const AddNewTodoModal = ({isVisible, onClose}) => {
                     right={<TextInput.Icon icon={() => <MaterialIcons name="circle" size={24} color={themeColor} />} />}                
                     value={newTodo}
                     onChangeText={setNewTodo}/>
+                    </View> 
+                    <View style={{flexDirection: 'row', justifyContent: 'space-between',alignItems: 'center'}}>
                 <Button
                     textColor= '#F1F3F4'
                     style={style.buttonSmall}
                     mode='contained'
                     onPress={openColorModal}
                     > <MaterialIcons name="circle" size={16} color={themeColor} /> Color
-                </Button>                
-                </View>                  
+                </Button>
+                <Button
+                    icon='calendar-edit'
+                    textColor= '#F1F3F4'
+                    style={date ? style.buttonMedium : style.buttonSmall}
+                    mode='contained'
+                    onPress={openCalendarModal}
+                    > {datePicked}
+                </Button>
+                </View>
+                                 
                 <View style={{flexDirection: 'row', justifyContent: 'space-between',alignItems: 'center'}}>
                 <Button
                     textColor= '#F1F3F4'
@@ -87,7 +116,11 @@ export const AddNewTodoModal = ({isVisible, onClose}) => {
             <ChooseColors 
             visible={isColorModalVisible} 
             onClose={closeColorModal} 
-            selectThemeColor={selectThemeColor}/> 
+            selectThemeColor={selectThemeColor}/>
+            <PickDate
+            visible={isCalendarModalVisible}
+            onClose={closeCalendarModal}
+            /> 
         </Portal>
     )    
 }
@@ -127,6 +160,19 @@ const ChooseColors = ({visible, onClose, selectThemeColor}) => {
               </View>
             </View>
           </RadioButton.Group>
+        </Modal>
+    )
+}
+
+const PickDate = ({visible, onClose}) => {
+  
+    return(
+        <Modal
+          visible={visible}
+          onDismiss={onClose}
+          contentContainerStyle={style.chooseColorModal}          
+        >
+          <Calendar onDayPress={onClose}/>
         </Modal>
     )
 }

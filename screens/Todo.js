@@ -1,6 +1,6 @@
 
 import { useEffect, useState } from 'react';
-import { Alert, Button, ScrollView, Text, View } from 'react-native';
+import { Alert, ScrollView, Text, View } from 'react-native';
 import {
   addDoc,
   collection,
@@ -19,7 +19,7 @@ import { MaterialIcons, FontAwesome } from '@expo/vector-icons';
 import style from "../styles/Styles"
 import { LinearGradientBG } from '../components/LinearGradientBG';
 import { TodoItem } from '../components/TodoItem';
-import { IconButton, Divider } from 'react-native-paper';
+import { IconButton, Divider, Button } from 'react-native-paper';
 import { AddNewToBuIcon } from '../components/AddNewToBuIcon';
 import { AddNewTodoModal } from '../components/AddNewTodoModal';
 
@@ -116,6 +116,7 @@ export default function Todos({ navigation }) {
           onPress={handlePressLogout}
         />
       </View>
+      <View style={style.innercontainer}>
       <Text style={style.infoText}>
         UnChecked ({filterTodos(false)})
       </Text>
@@ -142,6 +143,7 @@ export default function Todos({ navigation }) {
       <Text style={style.infoText}>
         Checked ({filterTodos(true)})
       </Text>
+      <Divider/>
       <View style={style.todosContainer}>
         <ScrollView contentContainerStyle={{flexGrow: 1}}>
           {todosKeys.length > 0 ? (
@@ -161,15 +163,20 @@ export default function Todos({ navigation }) {
             </Text>
           )}
         </ScrollView>
-      </View>
-      <View style={style.buttonStyle}>
+      </View>      
+       { todosKeys.length > 0 &&        
         <Button
-        title='remove all todos'
-        onPress={() => createTwoButtonAlert()}
-        />
+          icon='delete'
+          textColor= '#F1F3F4'
+          style={style.buttonsWide}
+          mode='contained'
+          onPress={() => createTwoButtonAlert()}
+        >
+        REMOVE ALL TODOS
+        </Button>}
       </View>      
       <AddNewTodoModal isVisible={modalVisible} onClose={()=> setModalVisible(false)} />
-      <Divider style={style.divider}/>
+      <View style={style.viewbottom}/>
       <AddNewToBuIcon onPress={()=> setModalVisible(true)}/>      
     </View>
   );

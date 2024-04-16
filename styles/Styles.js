@@ -33,6 +33,13 @@ export default Styles = StyleSheet.create({
       marginTop: 10,
       marginBottom: 10,
     },
+    buttonMedium: {
+      width: '50%',
+      borderColor: blue,
+      borderWidth: 2,
+      marginTop: 10,
+      marginBottom: 10,
+    },
     buttonSmall: {
       width: '40%',
       borderColor: blue,
@@ -65,7 +72,7 @@ export default Styles = StyleSheet.create({
     marginbottomsmall: {
       marginBottom: 20
     },
-    divider: {
+    viewbottom: {
       marginBottom: 80
     },
     textInput: {
@@ -126,7 +133,14 @@ export default Styles = StyleSheet.create({
       backgroundColor: darkblue,
       padding: 10,
       borderRadius: 10,
-      borderWidth: 1,        
+      borderWidth: 1,      
+      justifyContent: 'space-between',
+      alignItems: 'center',        
+    },
+    todoItemText: {
+      color: lightcolor,
+      fontSize: 16,
+      width: '80%'
     },
     logoutIcon: {
         position: 'absolute',
