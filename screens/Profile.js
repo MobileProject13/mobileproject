@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"
-import { Button, Text, View, Pressable, Alert } from "react-native"
+import { Text, View, Pressable, Alert, ScrollView, FlatList } from "react-native"
 import { onAuthStateChanged } from "firebase/auth"
 import { logout, changePassword, removeUser } from "../components/Auth"
 import style from "../styles/Styles"
@@ -7,18 +7,24 @@ import { MaterialIcons } from '@expo/vector-icons'
 import { auth, db, USERS_REF } from "../firebase/Config"
 import { collection, doc, getDoc, updateDoc } from "firebase/firestore"
 import { LinearGradientBG } from "../components/LinearGradientBG"
-import { TextInput, Modal, Portal } from 'react-native-paper'
+import { TextInput, Modal, Portal, Button, Avatar } from 'react-native-paper'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { set } from "firebase/database"
 
 export default function Profile({navigation}) {
 
     const [isLoggedIn, setIsLoggedIn] = useState(false)
     const [email, setEmail] = useState('')    
     const [nickname, setNickname] = useState('')
-    const [isVisible, setIsVisible] = useState(false)
+    const [isAccountSettingsVisible, setIsAccountSettingsVisible] = useState(false)
+    const [isAvatarModalVisible, setIsAvatarModalVisible] = useState(false)
+    const [selectedAvatar, setSelectedAvatar] = useState(null)
 
-    const openAccountSettingsModal = () => setIsVisible(true)
+    const openAvatarModal = () => setIsAvatarModalVisible(true)
+    const closeAvatarModal = () => setIsAvatarModalVisible(false)
 
-    const closeAccountSettingsModal = () => setIsVisible(false)
+    const openAccountSettingsModal = () => setIsAccountSettingsVisible(true)
+    const closeAccountSettingsModal = () => setIsAccountSettingsVisible(false)
 
     useEffect(() => {
         onAuthStateChanged(auth, async (user) => {            
@@ -63,31 +69,135 @@ export default function Profile({navigation}) {
         <View style={style.container}>
             <LinearGradientBG/>
             <View style={style.innercontainer}>
-            <Pressable style={style.buttonStyle} onPress={handlePressLogout}>
-                <MaterialIcons name="logout" size={24} color="black" />
-            </Pressable>            
-                <Text style={style.h2text}>My Profile</Text>            
-            <Text style={style.infoText}>Account: {email}</Text>
-            <Text style={style.infoText}>Nickname: {nickname}</Text>
-
-            <Button 
-            title="Account settings"
-            onPress={openAccountSettingsModal}
-            />
-        </View>
+                <Pressable style={style.buttonStyle} onPress={handlePressLogout}>
+                    <MaterialIcons name="logout" size={24} color="white" />
+                </Pressable>            
+                <Text style={style.h2text}>My Profile</Text>
+                <Pressable onPress={openAvatarModal}>
+                {selectedAvatar === null ?
+                    <Avatar.Icon size={200} icon='account' />
+                :    
+                    <Avatar.Image size={200} source={selectedAvatar} />}
+                </Pressable>            
+                <Text style={style.infoText}>Account: {email}</Text>
+                <Text style={style.infoText}>Nickname: {nickname}</Text>
+                <Button
+                    icon='image-edit-outline'
+                    textColor= '#F1F3F4'
+                    style={style.buttonsWide}
+                    mode='contained'
+                    onPress={openAvatarModal} 
+                > Change Avatar </Button>
+                <Button
+                    icon='account-settings'
+                    textColor= '#F1F3F4'
+                    style={style.buttonsWide}
+                    mode='contained' 
+                    onPress={openAccountSettingsModal}
+                > Account settings </Button>
+            </View>
+        <ChangeAvatarModal 
+            visible={isAvatarModalVisible} 
+            onClose={closeAvatarModal}
+            setSelectedAvatar={setSelectedAvatar}
+        />
         <AccountSettingsModal 
-        visible={isVisible} 
-        onClose={closeAccountSettingsModal}
-        nickname={nickname}
-        setNickname={setNickname}
+            visible={isAccountSettingsVisible} 
+            onClose={closeAccountSettingsModal}
+            nickname={nickname}
+            setNickname={setNickname}
          />
         </View>
     )
 }
 }
 
-const AccountSettingsModal = (
-    {visible, onClose, nickname, setNickname}) => {
+const ChangeAvatarModal = ({visible, onClose, setSelectedAvatar}) => {
+
+    const avatars = [
+        require('../assets/avatar01.png'),
+        require('../assets/avatar02.png'),
+        require('../assets/avatar03.png'),
+        require('../assets/avatar04.png'),
+        require('../assets/avatar05.png'),
+        require('../assets/avatar06.png'),
+        require('../assets/avatar07.png'),
+        require('../assets/avatar08.png')
+    ]
+
+    useEffect(() => {
+        getAvatarPath();
+    }, [])
+
+    const getAvatarPath = async () => {
+        try {
+            const avatarpath = await AsyncStorage.getItem('@avatar_index')
+            if(avatarpath !== null) {
+                setSelectedAvatar(avatars[parseInt(avatarpath, 10)])
+            }
+        } catch (error) {
+            console.log('Error getting avatar path:', error)
+        }
+    }
+
+    const handleAvatarPress = async (avatar) => {
+        const index = avatars.indexOf(avatar)
+        setSelectedAvatar(avatar)
+        try {
+            await AsyncStorage.setItem('@avatar_index', index.toString())
+        } catch (error) {
+            console.log('Error setting avatar path:', error)
+        }
+        onClose()
+    }
+
+    const removeAvatar = async() => {
+        setSelectedAvatar(null)
+        try {
+            await AsyncStorage.removeItem('@avatar_index')
+        } catch (error) {
+            console.log('Error removing avatar path:', error)
+        }
+        onClose()
+    }
+
+    return(
+        <Portal>
+            <Modal
+            visible={visible}
+            onDismiss={onClose}
+            contentContainerStyle={style.addNewtodoModal}>
+            <Text style={style.h2text}>Choose Avatar</Text>
+                <FlatList
+                data={avatars}
+                keyExtractor={(item, index) => index.toString()}
+                numColumns={4}
+                contentContainerStyle={{alignItems: 'center', justifyContent: 'center'}}
+                renderItem={({item}) => (
+                    <Pressable
+                    style={{margin: 10}} 
+                    onPress={() => handleAvatarPress(item)}>
+                        <Avatar.Image size={60} source={item} />
+                    </Pressable>
+                )}
+                />
+                <View style={{alignSelf: 'center', marginVertical: 10}}>
+                <Button
+                    icon='close'
+                    textColor= '#F1F3F4'
+                    style={style.buttonsWide}
+                    mode='contained'
+                    onPress={removeAvatar}
+                >
+                    Remove Avatar
+                </Button>
+                </View>
+            </Modal>
+        </Portal>
+    )
+}
+
+const AccountSettingsModal = ({visible, onClose, nickname, setNickname}) => {
 
     const [password, setPassword] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('')
@@ -138,58 +248,90 @@ const AccountSettingsModal = (
             <Modal
                 visible={visible} 
                 onDismiss={onClose} 
-                contentContainerStyle={style.addNewtodoModal} >            
-                <View>
-                    <Text style={style.h2text}>Account settings</Text>
-                    <Text style={style.infoText}>Update account</Text>
+                contentContainerStyle={style.addNewtodoModal} >
+                <View style={{alignItems: 'center'}}>
+                <Text style={style.h2text}>Account settings</Text>               
+                <ScrollView style={style.accountSettingModalScroll}>                    
+                    <Text style={style.h2text}>Update account</Text>
                     <Text style={style.infoText}>Nickname: {nickname}</Text>
                     <TextInput
-                    value={nickname}
-                    style={style.textInput}
-                    onChangeText={setNickname}
-                    />
-                    <View style={style.buttonStyle}>
-                        <Button 
-                        title="Update account" 
-                        onPress={() => updateUserData()} />
-                    </View>
+                    mode="outlined"
+                        style={[style.textInput, style.marginbottomsmall]}
+                        selectionColor='#F1F3F4'
+                        activeOutlineColor='#D5F67F'
+                        label='Enter new Nickname'
+                        right={<TextInput.Icon icon={() => <MaterialIcons name="person" size={24} color={'#F1F3F4'} />} />}
+                        value={nickname} 
+                        onChangeText={setNickname}
+                    />                   
+                    <Button 
+                        icon='account'
+                        textColor= '#F1F3F4'
+                        style={style.buttonsWide}
+                        mode='contained'                         
+                        onPress={() => updateUserData()}>
+                            Update Nickname
+                    </Button>                    
                     <Text style={style.infoText}>Change password</Text>   
                     <TextInput
-                    value={password}
-                    style={style.textInput}
-                    placeholder="Enter new password"
-                    onChangeText={(password) => setPassword(password)}
-                    secureTextEntry={true}
+                        mode="outlined"
+                        style={[style.textInput, style.marginbottomsmall]}
+                        selectionColor='#F1F3F4'
+                        activeOutlineColor='#D5F67F'
+                        value={password}
+                        label="Enter new password"
+                        right={<TextInput.Icon icon={() => <MaterialIcons name="lock" size={24} color={'#F1F3F4'} />} />}
+                        onChangeText={(password) => setPassword(password)}
+                        secureTextEntry={true}
                     />
                     <TextInput
-                    value={confirmPassword}
-                    style={style.textInput}
-                    placeholder="Confirm new password"
-                    onChangeText={(confirmPassword) => setConfirmPassword(confirmPassword)}
-                    secureTextEntry={true}
+                        mode="outlined"
+                        style={[style.textInput, style.marginbottomsmall]}
+                        selectionColor='#F1F3F4'
+                        activeOutlineColor='#D5F67F'
+                        value={confirmPassword}
+                        label="Confirm new password"
+                        right={<TextInput.Icon icon={() => <MaterialIcons name="lock" size={24} color={'#F1F3F4'} />} />}
+                        onChangeText={(confirmPassword) => setConfirmPassword(confirmPassword)}
+                        secureTextEntry={true}
                     />
                     <View style={style.buttonStyle}>
-                        <Button 
-                        title="Change password" 
-                        onPress={handlePressChangePw} /> 
+                        <Button
+                        icon='lock'
+                        textColor= '#F1F3F4'
+                        style={style.buttonsWide}
+                        mode='contained' 
+                        onPress={handlePressChangePw} > 
+                        Change password
+                        </Button>
                     </View>
                     <Text style={style.infoText}>Delete account</Text>
                     <TextInput
-                    value={confirmDelete}
-                    style={style.textInput}
-                    placeholder="Type DELETE to confirm"
-                    onChangeText={(confirmDelete) => setConfirmDelete(confirmDelete)}
-                    autoCapitalize="characters"
+                        mode="outlined"
+                        style={[style.textInput, style.marginbottomsmall]}
+                        selectionColor='#F1F3F4'
+                        activeOutlineColor='#D5F67F'
+                        value={confirmDelete}
+                        label="Type DELETE to confirm"
+                        right={<TextInput.Icon icon={() => <MaterialIcons name="close" size={24} color={'#F1F3F4'} />} />}
+                        onChangeText={(confirmDelete) => setConfirmDelete(confirmDelete)}
+                        autoCapitalize="characters"
                     />
                     <View style={style.buttonStyle}>
                         <Button 
-                        title="Delete account" 
-                        color="red"
-                        onPress={() => handlePressDelete()} />
+                            icon='account-remove'
+                            textColor= 'red'
+                            style={style.buttonsWide}
+                            mode='contained'
+                            onPress={() => handlePressDelete()} >
+                        Delete account
+                        </Button>
                         <Text style={style.infoText}>Warning: Your data will be removed from the database.</Text>
                     </View>
-                </View>
+                </ScrollView>
+                </View> 
             </Modal>
         </Portal>
     )
 }
+

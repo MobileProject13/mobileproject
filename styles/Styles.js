@@ -116,6 +116,9 @@ export default Styles = StyleSheet.create({
       fontSize: 16,
       width: 50
     },
+    accountSettingModalScroll: {
+      height: '80%'      
+    },
     todosContainer: {
         flexShrink: 1,
         marginTop: 15,
