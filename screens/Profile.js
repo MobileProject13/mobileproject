@@ -1,21 +1,24 @@
 import React, { useState, useEffect } from "react"
-import { Button, Text, View, Pressable, Alert, TextInput } from "react-native"
+import { Button, Text, View, Pressable, Alert } from "react-native"
 import { onAuthStateChanged } from "firebase/auth"
 import { logout, changePassword, removeUser } from "../components/Auth"
-import styles from "../styles/Styles"
+import style from "../styles/Styles"
 import { MaterialIcons } from '@expo/vector-icons'
 import { auth, db, USERS_REF } from "../firebase/Config"
 import { collection, doc, getDoc, updateDoc } from "firebase/firestore"
 import { LinearGradientBG } from "../components/LinearGradientBG"
+import { TextInput, Modal, Portal } from 'react-native-paper'
 
 export default function Profile({navigation}) {
 
     const [isLoggedIn, setIsLoggedIn] = useState(false)
     const [email, setEmail] = useState('')    
     const [nickname, setNickname] = useState('')
-    const [password, setPassword] = useState('')
-    const [confirmPassword, setConfirmPassword] = useState('')
-    const [confirmDelete, setConfirmDelete] = useState('')
+    const [isVisible, setIsVisible] = useState(false)
+
+    const openAccountSettingsModal = () => setIsVisible(true)
+
+    const closeAccountSettingsModal = () => setIsVisible(false)
 
     useEffect(() => {
         onAuthStateChanged(auth, async (user) => {            
@@ -42,6 +45,53 @@ export default function Profile({navigation}) {
         });
     }, []) 
 
+    const handlePressLogout = async () => {
+        logout()
+    }    
+
+    if (!isLoggedIn) {
+        return(
+            <View style={style.container}>
+                <LinearGradientBG/>
+                <View style={style.innercontainer}>
+                <Text style={style.h2text}>Loading..</Text>
+                </View>
+            </View>                
+        )
+    } else {
+    return (
+        <View style={style.container}>
+            <LinearGradientBG/>
+            <View style={style.innercontainer}>
+            <Pressable style={style.buttonStyle} onPress={handlePressLogout}>
+                <MaterialIcons name="logout" size={24} color="black" />
+            </Pressable>            
+                <Text style={style.h2text}>My Profile</Text>            
+            <Text style={style.infoText}>Account: {email}</Text>
+            <Text style={style.infoText}>Nickname: {nickname}</Text>
+
+            <Button 
+            title="Account settings"
+            onPress={openAccountSettingsModal}
+            />
+        </View>
+        <AccountSettingsModal 
+        visible={isVisible} 
+        onClose={closeAccountSettingsModal}
+        nickname={nickname}
+        setNickname={setNickname}
+         />
+        </View>
+    )
+}
+}
+
+const AccountSettingsModal = (
+    {visible, onClose, nickname, setNickname}) => {
+
+    const [password, setPassword] = useState('')
+    const [confirmPassword, setConfirmPassword] = useState('')
+    const [confirmDelete, setConfirmDelete] = useState('')
 
     const updateUserData = async () => {
         const colRef = collection(db, USERS_REF)
@@ -83,78 +133,63 @@ export default function Profile({navigation}) {
         }
     }
 
-    const handlePressLogout = async () => {
-        logout()
-    }    
-
-    if (!isLoggedIn) {
-        return(
-            <View style={styles.container}>
-                <LinearGradientBG/>
-                <View style={styles.innercontainer}>
-                <Text style={styles.h2text}>Loading..</Text>
-                </View>
-            </View>                
-        )
-    } else {
     return (
-        <View style={styles.container}>
-            <LinearGradientBG/>
-            <View style={styles.innercontainer}>            
-                <Text style={styles.h2text}>My Profile</Text>            
-            <Text style={styles.infoText}>Account: {email}</Text>
-            <Pressable style={styles.buttonStyle} onPress={handlePressLogout}>
-                <MaterialIcons name="logout" size={24} color="black" />
-            </Pressable>
-            <Text style={styles.infoText}>Update account</Text>
-            <Text style={styles.infoText}>Nickname: {nickname}</Text>
-            <TextInput
-            value={nickname}
-            style={styles.textInput}
-            onChangeText={setNickname}
-            />
-            <View style={styles.buttonStyle}>
-                <Button 
-                title="Update account" 
-                onPress={() => updateUserData()} />
-            </View>
-            <Text style={styles.infoText}>Change password</Text>   
-            <TextInput
-            value={password}
-            style={styles.textInput}
-            placeholder="Enter new password"
-            onChangeText={(password) => setPassword(password)}
-            secureTextEntry={true}
-            />
-            <TextInput
-            value={confirmPassword}
-            style={styles.textInput}
-            placeholder="Confirm new password"
-            onChangeText={(confirmPassword) => setConfirmPassword(confirmPassword)}
-            secureTextEntry={true}
-            />
-            <View style={styles.buttonStyle}>
-                <Button 
-                title="Change password" 
-                onPress={handlePressChangePw} /> 
-            </View>
-            <Text style={styles.infoText}>Delete account</Text>
-            <TextInput
-            value={confirmDelete}
-            style={styles.textInput}
-            placeholder="Type DELETE to confirm"
-            onChangeText={(confirmDelete) => setConfirmDelete(confirmDelete)}
-            autoCapitalize="characters"
-            />
-            <View style={styles.buttonStyle}>
-                <Button 
-                title="Delete account" 
-                color="red"
-                onPress={() => handlePressDelete()} />
-                <Text style={styles.infoText}>Warning: Your data will be removed from the database.</Text>
-            </View>
-        </View>
-        </View>
+        <Portal>
+            <Modal
+                visible={visible} 
+                onDismiss={onClose} 
+                contentContainerStyle={style.addNewtodoModal} >            
+                <View>
+                    <Text style={style.h2text}>Account settings</Text>
+                    <Text style={style.infoText}>Update account</Text>
+                    <Text style={style.infoText}>Nickname: {nickname}</Text>
+                    <TextInput
+                    value={nickname}
+                    style={style.textInput}
+                    onChangeText={setNickname}
+                    />
+                    <View style={style.buttonStyle}>
+                        <Button 
+                        title="Update account" 
+                        onPress={() => updateUserData()} />
+                    </View>
+                    <Text style={style.infoText}>Change password</Text>   
+                    <TextInput
+                    value={password}
+                    style={style.textInput}
+                    placeholder="Enter new password"
+                    onChangeText={(password) => setPassword(password)}
+                    secureTextEntry={true}
+                    />
+                    <TextInput
+                    value={confirmPassword}
+                    style={style.textInput}
+                    placeholder="Confirm new password"
+                    onChangeText={(confirmPassword) => setConfirmPassword(confirmPassword)}
+                    secureTextEntry={true}
+                    />
+                    <View style={style.buttonStyle}>
+                        <Button 
+                        title="Change password" 
+                        onPress={handlePressChangePw} /> 
+                    </View>
+                    <Text style={style.infoText}>Delete account</Text>
+                    <TextInput
+                    value={confirmDelete}
+                    style={style.textInput}
+                    placeholder="Type DELETE to confirm"
+                    onChangeText={(confirmDelete) => setConfirmDelete(confirmDelete)}
+                    autoCapitalize="characters"
+                    />
+                    <View style={style.buttonStyle}>
+                        <Button 
+                        title="Delete account" 
+                        color="red"
+                        onPress={() => handlePressDelete()} />
+                        <Text style={style.infoText}>Warning: Your data will be removed from the database.</Text>
+                    </View>
+                </View>
+            </Modal>
+        </Portal>
     )
-}
 }
