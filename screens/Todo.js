@@ -82,11 +82,9 @@ export default function Todos({ navigation }) {
   {cancelable: false}
   )
 
-  const handlePressLogout = () => {
-    logout()
-  }
-
   let todosKeys = Object.keys(todos)
+
+  const [filterButtons, setFilterButtons] = useState('all')
 
   if (!isLoggedIn) {
     return(
@@ -111,10 +109,50 @@ export default function Todos({ navigation }) {
           onPress={() => navigation.navigate('Profile')}
         />
       </View>
+      <View style={{flexDirection: 'row'}}>
+        <Button style={style.buttonSmall} textColor= '#F1F3F4'
+          mode='contained' onPress={() => setFilterButtons('all')} > all ({todosKeys.length})</Button>
+        <Button style={style.buttonSmall} textColor= '#F1F3F4'
+          mode='contained' onPress={() => setFilterButtons('unchecked')} >unchecked ({filterTodos(false)})</Button>
+        <Button style={style.buttonSmall} textColor= '#F1F3F4'
+          mode='contained' onPress={() => setFilterButtons('checked')} >checked ({filterTodos(true)})</Button>
+      </View>
       <View style={style.innercontainer}>
-      <Text style={style.infoText}>
-        UnChecked ({filterTodos(false)})
-      </Text>
+
+    {filterButtons === 'all' && (
+      <View style={style.todosContainer}>
+        <ScrollView contentContainerStyle={{flexGrow: 1}}>
+          {todosKeys.length > 0 ? (
+        <>
+        {todosKeys.filter(key => !todos[key].done).map((key, i) => (
+          <TodoItem
+          key={key}
+          todoItem={todos[key].todoItem}
+          done={todos[key].done}
+          todoId={todos[key].id}
+          themeColor={todos[key].themeColor}
+          />
+        ))}
+        {todosKeys.filter(key => todos[key].done).map((key, i) => (
+          <TodoItem
+          key={key}
+          todoItem={todos[key].todoItem}
+          done={todos[key].done}
+          todoId={todos[key].id}
+          themeColor={todos[key].themeColor}
+          />
+        ))}
+      </>
+          ) : (
+            <Text style={style.infoText}>
+              There are no items.
+            </Text>
+          )}
+        </ScrollView>
+      </View>
+    )}
+
+    {filterButtons === 'unchecked' && (
       <View style={style.todosContainer}>
         <ScrollView contentContainerStyle={{flexGrow: 1}}>
           {todosKeys.length > 0 ? (
@@ -135,10 +173,9 @@ export default function Todos({ navigation }) {
           )}
         </ScrollView>
       </View>
-      <Text style={style.infoText}>
-        Checked ({filterTodos(true)})
-      </Text>
-      <Divider/>
+    )}
+
+    {filterButtons === 'checked' && (
       <View style={style.todosContainer}>
         <ScrollView contentContainerStyle={{flexGrow: 1}}>
           {todosKeys.length > 0 ? (
@@ -158,7 +195,8 @@ export default function Todos({ navigation }) {
             </Text>
           )}
         </ScrollView>
-      </View>      
+      </View>
+    )}      
        { todosKeys.length > 0 &&        
         <Button
           icon='delete'
