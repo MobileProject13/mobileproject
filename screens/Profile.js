@@ -9,7 +9,6 @@ import { collection, doc, getDoc, updateDoc } from "firebase/firestore"
 import { LinearGradientBG } from "../components/LinearGradientBG"
 import { TextInput, Modal, Portal, Button, Avatar } from 'react-native-paper'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { set } from "firebase/database"
 
 export default function Profile({navigation}) {
 
@@ -68,10 +67,16 @@ export default function Profile({navigation}) {
     return (
         <View style={style.container}>
             <LinearGradientBG/>
-            <View style={style.innercontainer}>
+            <View style={{marginHorizontal: 10, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
+                <Pressable style={style.buttonStyle} onPress={()=> navigation.goBack()}>
+                    <MaterialIcons name="arrow-back" size={40} color="white" />
+                </Pressable>
                 <Pressable style={style.buttonStyle} onPress={handlePressLogout}>
-                    <MaterialIcons name="logout" size={24} color="white" />
-                </Pressable>            
+                    <MaterialIcons name="logout" size={40} color="white" />
+                </Pressable>                
+                </View>   
+            <View style={style.innercontainer}>
+         
                 <Text style={style.h2text}>My Profile</Text>
                 <Pressable onPress={openAvatarModal}>
                 {selectedAvatar === null ?

@@ -44,7 +44,7 @@ export default function Navigation() {
         ) : (
         <>
           <Stack.Screen name="TabNav" component={TabNavigator} options={{ headerShown: false }} />
-          <Stack.Screen name="Profile" component={Profile}  />
+          <Stack.Screen name="Profile" component={Profile} options={{ headerShown: false }} />
         </>
         )}
       </Stack.Navigator>

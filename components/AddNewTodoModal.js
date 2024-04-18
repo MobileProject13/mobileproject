@@ -41,6 +41,9 @@ export const AddNewTodoModal = ({isVisible, onClose}) => {
     let datePicked = date ? date?.dateString : 'Date'
 
     const addNewTodo = async () => {
+
+      const IsDateChosen = date ? date : ''
+
         try {
           if (newTodo.trim() !== '') {
             const subColRef = collection(
@@ -49,7 +52,7 @@ export const AddNewTodoModal = ({isVisible, onClose}) => {
               done: false,
               todoItem: newTodo,
               themeColor: themeColor,
-              todoDate: date
+              todoDate: IsDateChosen
             })
             setNewTodo('')
             setThemeColor('#80D4F5')
