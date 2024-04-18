@@ -39,8 +39,7 @@ export default function Register({ navigation }) {
             onAuthStateChanged(auth, async (user) => {
                 if (user) {                    
                     setEmail('')
-                    setPassword('')                    
-                    //navigation.navigate('Todo')
+                    setPassword('')
                 }
             })
         }
@@ -57,10 +56,6 @@ export default function Register({ navigation }) {
 
     const handlePressForgotPw = () => {
         setShowForgotPw(!showForgotPw)
-    }
-
-    const handlePressLogout = async () => {
-        logout()
     }
 
 

@@ -25,6 +25,17 @@ export default function Profile({navigation}) {
     const openAccountSettingsModal = () => setIsAccountSettingsVisible(true)
     const closeAccountSettingsModal = () => setIsAccountSettingsVisible(false)
 
+    const avatars = [
+        require('../assets/avatar01.png'),
+        require('../assets/avatar02.png'),
+        require('../assets/avatar03.png'),
+        require('../assets/avatar04.png'),
+        require('../assets/avatar05.png'),
+        require('../assets/avatar06.png'),
+        require('../assets/avatar07.png'),
+        require('../assets/avatar08.png')
+    ]
+
     useEffect(() => {
         onAuthStateChanged(auth, async (user) => {            
             if (user) {                
@@ -49,6 +60,23 @@ export default function Profile({navigation}) {
             }
         });
     }, []) 
+
+    const userIdforAvatar = auth.currentUser ? auth.currentUser.uid : null;
+
+    useEffect(() => {
+        const fetchAvatar = async () => {
+          try {
+            const avatarIndex = await AsyncStorage.getItem('@avatar_index' + userIdforAvatar);
+            if (avatarIndex !== null) {
+              setSelectedAvatar(avatars[parseInt(avatarIndex, 10)]);
+            }
+          } catch (error) {
+            console.log('Error getting avatar path:', error);
+          }
+        };
+    
+        fetchAvatar();
+      }, []);
 
     const handlePressLogout = async () => {
         logout()
@@ -105,6 +133,7 @@ export default function Profile({navigation}) {
             visible={isAvatarModalVisible} 
             onClose={closeAvatarModal}
             setSelectedAvatar={setSelectedAvatar}
+            avatars={avatars}
         />
         <AccountSettingsModal 
             visible={isAccountSettingsVisible} 
@@ -117,18 +146,7 @@ export default function Profile({navigation}) {
 }
 }
 
-const ChangeAvatarModal = ({visible, onClose, setSelectedAvatar}) => {
-
-    const avatars = [
-        require('../assets/avatar01.png'),
-        require('../assets/avatar02.png'),
-        require('../assets/avatar03.png'),
-        require('../assets/avatar04.png'),
-        require('../assets/avatar05.png'),
-        require('../assets/avatar06.png'),
-        require('../assets/avatar07.png'),
-        require('../assets/avatar08.png')
-    ]
+const ChangeAvatarModal = ({visible, onClose, setSelectedAvatar, avatars}) => {
 
     useEffect(() => {
         getAvatarPath();
@@ -145,11 +163,13 @@ const ChangeAvatarModal = ({visible, onClose, setSelectedAvatar}) => {
         }
     }
 
+    const userIdforAvatar = auth.currentUser.uid
+
     const handleAvatarPress = async (avatar) => {
         const index = avatars.indexOf(avatar)
         setSelectedAvatar(avatar)
         try {
-            await AsyncStorage.setItem('@avatar_index', index.toString())
+            await AsyncStorage.setItem('@avatar_index'+ userIdforAvatar, index.toString())
         } catch (error) {
             console.log('Error setting avatar path:', error)
         }
@@ -159,7 +179,7 @@ const ChangeAvatarModal = ({visible, onClose, setSelectedAvatar}) => {
     const removeAvatar = async() => {
         setSelectedAvatar(null)
         try {
-            await AsyncStorage.removeItem('@avatar_index')
+            await AsyncStorage.removeItem('@avatar_index' + userIdforAvatar)
         } catch (error) {
             console.log('Error removing avatar path:', error)
         }
