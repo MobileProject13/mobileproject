@@ -102,18 +102,13 @@ export default function Todos({ navigation }) {
     <View style={style.container}>
       <LinearGradientBG/>
       <View style={style.headerItem}>
+        <Text style={style.h2text}>My todolist ({todosKeys.length})</Text>
         <IconButton
           icon="account-circle"
           iconColor='#F1F3F4'
+          style={style.profileIconPosition}
           size={40}
           onPress={() => navigation.navigate('Profile')}
-        />
-        <Text style={style.h2text}>My todolist ({todosKeys.length})</Text>
-        <IconButton
-          icon="logout"
-          iconColor='#F1F3F4'
-          size={24}
-          onPress={handlePressLogout}
         />
       </View>
       <View style={style.innercontainer}>

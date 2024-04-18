@@ -7,7 +7,7 @@ import { MaterialIcons } from '@expo/vector-icons'
 import { auth, db, USERS_REF } from "../firebase/Config"
 import { collection, doc, getDoc, updateDoc } from "firebase/firestore"
 import { LinearGradientBG } from "../components/LinearGradientBG"
-import { TextInput, Modal, Portal, Button, Avatar } from 'react-native-paper'
+import { TextInput, Modal, Portal, Button, Avatar, IconButton } from 'react-native-paper'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 export default function Profile({navigation}) {
@@ -67,7 +67,7 @@ export default function Profile({navigation}) {
     return (
         <View style={style.container}>
             <LinearGradientBG/>
-            <View style={{marginHorizontal: 10, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
+            <View style={style.profiletopbar}>
                 <Pressable style={style.buttonStyle} onPress={()=> navigation.goBack()}>
                     <MaterialIcons name="arrow-back" size={40} color="white" />
                 </Pressable>
@@ -172,6 +172,12 @@ const ChangeAvatarModal = ({visible, onClose, setSelectedAvatar}) => {
             visible={visible}
             onDismiss={onClose}
             contentContainerStyle={style.addNewtodoModal}>
+                <IconButton
+                        icon='close'
+                        color='white'
+                        size={24}
+                        onPress={onClose}
+                    />
             <Text style={style.h2text}>Choose Avatar</Text>
                 <FlatList
                 data={avatars}
@@ -254,9 +260,19 @@ const AccountSettingsModal = ({visible, onClose, nickname, setNickname}) => {
                 visible={visible} 
                 onDismiss={onClose} 
                 contentContainerStyle={style.addNewtodoModal} >
-                <View style={{alignItems: 'center'}}>
+                <View >
+                    <IconButton
+                        icon='close'
+                        color='white'
+                        size={24}
+                        onPress={onClose}
+                    />
                 <Text style={style.h2text}>Account settings</Text>               
-                <ScrollView style={style.accountSettingModalScroll}>                    
+                <ScrollView
+                contentContainerStyle={style.accountSettingScrollcontainerstyle} 
+                style={style.accountSettingModalScroll}
+                showsVerticalScrollIndicator={true}
+                >                    
                     <Text style={style.h2text}>Update account</Text>
                     <Text style={style.infoText}>Nickname: {nickname}</Text>
                     <TextInput
@@ -321,8 +337,7 @@ const AccountSettingsModal = ({visible, onClose, nickname, setNickname}) => {
                         right={<TextInput.Icon icon={() => <MaterialIcons name="close" size={24} color={'#F1F3F4'} />} />}
                         onChangeText={(confirmDelete) => setConfirmDelete(confirmDelete)}
                         autoCapitalize="characters"
-                    />
-                    <View style={style.buttonStyle}>
+                    />                    
                         <Button 
                             icon='account-remove'
                             textColor= 'red'
@@ -331,8 +346,7 @@ const AccountSettingsModal = ({visible, onClose, nickname, setNickname}) => {
                             onPress={() => handlePressDelete()} >
                         Delete account
                         </Button>
-                        <Text style={style.infoText}>Warning: Your data will be removed from the database.</Text>
-                    </View>
+                        <Text style={style.infoText}>Warning: Your data will be removed from the database.</Text>                   
                 </ScrollView>
                 </View> 
             </Modal>

@@ -119,6 +119,11 @@ export default Styles = StyleSheet.create({
     accountSettingModalScroll: {
       height: '80%'      
     },
+    accountSettingScrollcontainerstyle: {
+      flexGrow: 1,
+      justifyContent: 'center', 
+      alignItems: 'center'
+    },
     todosContainer: {
         flexShrink: 1,
         marginTop: 15,
@@ -145,15 +150,28 @@ export default Styles = StyleSheet.create({
       fontSize: 16,
       width: '80%'
     },
+    profiletopbar:{
+      marginHorizontal: 10,
+      marginTop: 16, 
+      flexDirection: 'row', 
+      justifyContent: 'space-between', 
+      alignItems: 'center'
+    },
     logoutIcon: {
         position: 'absolute',
         right: 10,
         top: 10
     },
     headerItem: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center'
+      marginHorizontal: 10,
+      marginTop: 16, 
+      flexDirection: 'row', 
+      justifyContent: 'center', 
+      alignItems: 'center'
+    },
+    profileIconPosition: {
+        position: 'absolute',
+        right: 10,
     },
     myAccountSubheader: {
         marginTop: 20,
