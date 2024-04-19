@@ -1,6 +1,6 @@
 
 import React, { useEffect, useState } from 'react';
-import { Alert, ScrollView, Text, View, Pressable } from 'react-native';
+import { Alert, ScrollView, Text, View, Pressable, ImageBackground } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import {
   addDoc,
@@ -23,6 +23,8 @@ import { Button, SegmentedButtons} from 'react-native-paper';
 import { AddNewToBuIcon } from '../components/AddNewToBuIcon';
 import { AddNewTodoModal } from '../components/AddNewTodoModal';
 import  AvatarIconNavigatesProfile  from '../components/AvatarIconNavigatesProfile';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { defaultBGImg } from '../components/DataArrays';
 
 export default function Todos({ navigation }) {
 
@@ -30,6 +32,9 @@ export default function Todos({ navigation }) {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [modalVisible, setModalVisible] = useState(false)
   const [filterButtons, setFilterButtons] = useState('all')
+  const [selectedBGImg, setSelectedBGImg] = useState(null)
+
+  const userIdforAvatar = auth.currentUser ? auth.currentUser.uid : null;
 
   useEffect(() => {
     onAuthStateChanged(auth, async (user) => {
@@ -48,6 +53,23 @@ export default function Todos({ navigation }) {
       }    
     })    
   }, [])
+
+  useFocusEffect(
+    React.useCallback(() => {
+      getSelectedBackgroundImage();
+    }, [])
+  );
+  
+  const getSelectedBackgroundImage = async () => {
+        try {
+          const selectedBgImage = await AsyncStorage.getItem('@selected_bg_image' + userIdforAvatar);
+          if (selectedBgImage !== null) {
+            setSelectedBGImg(JSON.parse(selectedBgImage));
+          }
+        } catch (error) {
+          console.log('Error getting selected background image:', error);
+        }
+  };
 
   const removeTodo = async (id) => {
     try {
@@ -99,6 +121,7 @@ export default function Todos({ navigation }) {
   return (
     <View style={style.container}>
       <LinearGradientBG/>
+      <ImageBackground source={selectedBGImg ? selectedBGImg : defaultBGImg} style={{flex:1}} >
       <View style={style.headerItem}>
         <Text style={style.h2text}>My todolist ({todosKeys.length})</Text>
         <AvatarIconNavigatesProfile navigation={navigation}/>
@@ -216,7 +239,8 @@ export default function Todos({ navigation }) {
       </View>      
       <AddNewTodoModal isVisible={modalVisible} onClose={()=> setModalVisible(false)} />
       <View style={style.viewbottom}/>
-      <AddNewToBuIcon onPress={()=> setModalVisible(true)}/>      
+      <AddNewToBuIcon onPress={()=> setModalVisible(true)}/>  
+      </ImageBackground>    
     </View>
   );
 }

@@ -6,10 +6,9 @@ import style from "../styles/Styles"
 import { MaterialIcons } from '@expo/vector-icons'
 import { auth, db, USERS_REF } from "../firebase/Config"
 import { collection, doc, getDoc, updateDoc } from "firebase/firestore"
-import { LinearGradientBG } from "../components/LinearGradientBG"
 import { TextInput, Modal, Portal, Button, Avatar, IconButton } from 'react-native-paper'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { avatars } from "../components/DataArrays"
+import { avatars, bgImages, defaultBGImg } from "../components/DataArrays"
 
 export default function Profile({navigation}) {
 
@@ -30,14 +29,6 @@ export default function Profile({navigation}) {
 
     const openAccountSettingsModal = () => setIsAccountSettingsVisible(true)
     const closeAccountSettingsModal = () => setIsAccountSettingsVisible(false)
-
-    const bgImages = [
-        require('../assets/bgimg01.jpg'),
-        require('../assets/bgimg02.jpg'),
-        require('../assets/bgimg03.jpg'),
-        require('../assets/bgimg04.jpg'),
-        require('../assets/bgimg05.jpg')
-]
 
     useEffect(() => {
         onAuthStateChanged(auth, async (user) => {            
@@ -76,9 +67,22 @@ export default function Profile({navigation}) {
           } catch (error) {
             console.log('Error getting avatar path:', error);
           }
-        };
-    
+        };    
         fetchAvatar();
+      }, []);
+
+      useEffect(() => {
+        const getSelectedBackgroundImage = async () => {
+            try {
+              const selectedBgImage = await AsyncStorage.getItem('@selected_bg_image' + userIdforAvatar);
+              if (selectedBgImage !== null) {
+                setSelectedBGImg(JSON.parse(selectedBgImage));
+              }
+            } catch (error) {
+              console.log('Error getting selected background image:', error);
+            }
+          };
+        getSelectedBackgroundImage();
       }, []);
 
     const handlePressLogout = async () => {
@@ -88,16 +92,17 @@ export default function Profile({navigation}) {
     if (!isLoggedIn) {
         return(
             <View style={style.container}>
-                <LinearGradientBG/>
+                <ImageBackground source={selectedBGImg ? selectedBGImg : defaultBGImg} style={{flex:1}} >
                 <View style={style.innercontainer}>
                 <Text style={style.h2text}>Loading..</Text>
                 </View>
+                </ImageBackground>
             </View>                
         )
     } else {
     return (
         <View style={style.container}>
-            <LinearGradientBG/>
+            <ImageBackground source={selectedBGImg ? selectedBGImg : defaultBGImg} style={{flex:1}} >
             <View style={style.profiletopbar}>
                 <Pressable style={style.buttonStyle} onPress={()=> navigation.goBack()}>
                     <MaterialIcons name="arrow-back" size={40} color="white" />
@@ -106,8 +111,7 @@ export default function Profile({navigation}) {
                     <MaterialIcons name="logout" size={40} color="white" />
                 </Pressable>                
                 </View>   
-            <View style={style.innercontainer}>
-         
+            <View style={style.innercontainer}>         
                 <Text style={style.h2text}>My Profile</Text>
                 <Pressable onPress={openAvatarModal}>
                 {selectedAvatar === null ?
@@ -139,6 +143,7 @@ export default function Profile({navigation}) {
                     onPress={openAccountSettingsModal}
                 > Account settings </Button>
             </View>
+            </ImageBackground>
         <BGImgModal
             visible={isBGImgModalVisible} 
             onClose={closeBGImgModal}
@@ -164,9 +169,25 @@ export default function Profile({navigation}) {
 
 const BGImgModal = ({visible, onClose, setSelectedBGImg, bgImages}) => {
 
-    const handleBGImgPress = (bgImg) => {
+    const userIdforAvatar = auth.currentUser.uid
+
+    const handleBGImgPress = async (bgImg) => {
         setSelectedBGImg(bgImg)
-        console.log('Selected BG Image:', bgImg);
+        try {
+            await AsyncStorage.setItem('@selected_bg_image' + userIdforAvatar, JSON.stringify(bgImg));
+          } catch (error) {
+            console.log('Error saving selected background image:', error);
+          }        
+        onClose()
+    }
+
+    const removeBGImg = async() => {
+        setSelectedBGImg(null)
+        try {
+            await AsyncStorage.removeItem('@selected_bg_image' + userIdforAvatar)
+        } catch (error) {
+            console.log('Error removing avatar path:', error)
+        }
         onClose()
     }
 
@@ -196,6 +217,17 @@ const BGImgModal = ({visible, onClose, setSelectedBGImg, bgImages}) => {
                     </Pressable>
                 )}
                 />
+                <View style={{alignSelf: 'center', marginVertical: 10}}>
+                <Button
+                    icon='close'
+                    textColor= '#F1F3F4'
+                    style={style.buttonsWide}
+                    mode='contained'
+                    onPress={removeBGImg}
+                >
+                    Remove BackgrounImage
+                </Button>
+                </View>
             </Modal>
         </Portal>
     )

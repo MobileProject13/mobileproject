@@ -16,3 +16,5 @@ export const bgImages = [
     require('../assets/bgimg04.jpg'),
     require('../assets/bgimg05.jpg')
 ]
+
+export const defaultBGImg = require('../assets/defaultbgimg00.jpg')
