@@ -173,6 +173,12 @@ export default Styles = StyleSheet.create({
         position: 'absolute',
         right: 10,
     },
+    segmentedButtons: {
+      width: '90%', 
+      alignSelf: 'center', 
+      marginTop: 15, 
+      marginBottom: 10
+    },
     myAccountSubheader: {
         marginTop: 20,
         fontSize: 20

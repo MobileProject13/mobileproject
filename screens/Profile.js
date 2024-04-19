@@ -9,6 +9,7 @@ import { collection, doc, getDoc, updateDoc } from "firebase/firestore"
 import { LinearGradientBG } from "../components/LinearGradientBG"
 import { TextInput, Modal, Portal, Button, Avatar, IconButton } from 'react-native-paper'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { avatars } from "../components/DataArrays"
 
 export default function Profile({navigation}) {
 
@@ -29,17 +30,6 @@ export default function Profile({navigation}) {
 
     const openAccountSettingsModal = () => setIsAccountSettingsVisible(true)
     const closeAccountSettingsModal = () => setIsAccountSettingsVisible(false)
-
-    const avatars = [
-        require('../assets/avatar01.png'),
-        require('../assets/avatar02.png'),
-        require('../assets/avatar03.png'),
-        require('../assets/avatar04.png'),
-        require('../assets/avatar05.png'),
-        require('../assets/avatar06.png'),
-        require('../assets/avatar07.png'),
-        require('../assets/avatar08.png')
-    ]
 
     const bgImages = [
         require('../assets/bgimg01.jpg'),
@@ -188,12 +178,12 @@ const BGImgModal = ({visible, onClose, setSelectedBGImg, bgImages}) => {
             contentContainerStyle={[style.addNewtodoModal, {height: '80%'}]}
             >
                 <IconButton
-                        icon='close'
-                        color='white'
-                        size={24}
-                        onPress={onClose}
-                    />
-            <Text style={style.h2text}>Choose Background Image</Text>
+                    icon='close'
+                    color='white'
+                    size={24}
+                    onPress={onClose}
+                />
+                <Text style={style.h2text}>Choose Background Image</Text>
                 <FlatList
                 data={bgImages}
                 keyExtractor={(item, index) => index.toString()}
@@ -361,7 +351,7 @@ const AccountSettingsModal = ({visible, onClose, nickname, setNickname}) => {
                     <Text style={style.h2text}>Update account</Text>
                     <Text style={style.infoText}>Nickname: {nickname}</Text>
                     <TextInput
-                    mode="outlined"
+                        mode="outlined"
                         style={[style.textInput, style.marginbottomsmall]}
                         selectionColor='#F1F3F4'
                         activeOutlineColor='#D5F67F'
@@ -423,12 +413,12 @@ const AccountSettingsModal = ({visible, onClose, nickname, setNickname}) => {
                         onChangeText={(confirmDelete) => setConfirmDelete(confirmDelete)}
                         autoCapitalize="characters"
                     />                    
-                        <Button 
-                            icon='account-remove'
-                            textColor= 'red'
-                            style={style.buttonsWide}
-                            mode='contained'
-                            onPress={() => handlePressDelete()} >
+                    <Button 
+                        icon='account-remove'
+                        textColor= 'red'
+                        style={style.buttonsWide}
+                        mode='contained'
+                        onPress={() => handlePressDelete()} >
                         Delete account
                         </Button>
                         <Text style={style.infoText}>Warning: Your data will be removed from the database.</Text>                   

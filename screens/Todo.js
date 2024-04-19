@@ -1,6 +1,7 @@
 
-import { useEffect, useState } from 'react';
-import { Alert, ScrollView, Text, View } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { Alert, ScrollView, Text, View, Pressable } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 import {
   addDoc,
   collection,
@@ -13,16 +14,15 @@ import {
 } from 'firebase/firestore'
 import { db, TODOS_REF, USERS_REF } from '../firebase/Config';
 import { auth } from '../firebase/Config';
-import { logout } from '../components/Auth';
 import { onAuthStateChanged } from 'firebase/auth';
 import { MaterialIcons, FontAwesome } from '@expo/vector-icons';
 import style from "../styles/Styles"
 import { LinearGradientBG } from '../components/LinearGradientBG';
 import { TodoItem } from '../components/TodoItem';
-import { IconButton, Divider, Button, SegmentedButtons } from 'react-native-paper';
+import { Button, SegmentedButtons} from 'react-native-paper';
 import { AddNewToBuIcon } from '../components/AddNewToBuIcon';
 import { AddNewTodoModal } from '../components/AddNewTodoModal';
-import { set } from 'firebase/database';
+import  AvatarIconNavigatesProfile  from '../components/AvatarIconNavigatesProfile';
 
 export default function Todos({ navigation }) {
 
@@ -101,15 +101,9 @@ export default function Todos({ navigation }) {
       <LinearGradientBG/>
       <View style={style.headerItem}>
         <Text style={style.h2text}>My todolist ({todosKeys.length})</Text>
-        <IconButton
-          icon="account-circle"
-          iconColor='#F1F3F4'
-          style={style.profileIconPosition}
-          size={40}
-          onPress={() => navigation.navigate('Profile')}
-        />
+        <AvatarIconNavigatesProfile navigation={navigation}/>
       </View>
-      <View style={{width: '90%', alignSelf: 'center', marginTop: 15, marginBottom: 10}}>
+      <View style={style.segmentedButtons}>
         <SegmentedButtons
         value={filterButtons}
         onValueChange={setFilterButtons}
