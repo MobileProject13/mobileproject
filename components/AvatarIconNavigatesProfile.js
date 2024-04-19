@@ -7,6 +7,10 @@ import { Avatar } from 'react-native-paper';
 import style from '../styles/Styles';
 import { Pressable } from 'react-native';
 
+//this is reusable component that 
+//displays the user's avatar icon or selected image in the to right and 
+//navigates to the profile screen when pressed
+
 const AvatarIconNavigatesProfile = ({navigation}) => {
   const [selectedAvatar, setSelectedAvatar] = useState(null);
   const userIdforAvatar = auth.currentUser ? auth.currentUser.uid : null;

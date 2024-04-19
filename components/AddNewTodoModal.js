@@ -5,9 +5,9 @@ import { useState } from 'react';
 import { addDoc, collection } from 'firebase/firestore';
 import { db, auth, USERS_REF, TODOS_REF } from '../firebase/Config';
 import { MaterialIcons } from '@expo/vector-icons'
-import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Calendar } from "react-native-calendars"
-import { set } from 'firebase/database';
+
+//modal to add new todo item
 
 export const AddNewTodoModal = ({isVisible, onClose}) => {
 
@@ -17,21 +17,13 @@ export const AddNewTodoModal = ({isVisible, onClose}) => {
     const [isCalendarModalVisible, setIsCalendarModalVisible] = useState(false)
     const [date, setDate] = useState()
 
-    const openColorModal = () => {
-      setIsColorModalVisible(true)
-    }
+    const openColorModal = () => setIsColorModalVisible(true)    
 
-    const closeColorModal = () => {
-      setIsColorModalVisible(false)
-    }
+    const closeColorModal = () => setIsColorModalVisible(false)    
 
-    const selectThemeColor = (color) => {
-      setThemeColor(color)
-    }
+    const selectThemeColor = (color) => setThemeColor(color)    
 
-    const openCalendarModal = () => {
-      setIsCalendarModalVisible(true)
-    }
+    const openCalendarModal = () => setIsCalendarModalVisible(true)    
 
     const closeCalendarModal = (day) => {
       setIsCalendarModalVisible(false)
