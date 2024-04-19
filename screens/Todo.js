@@ -19,15 +19,17 @@ import { MaterialIcons, FontAwesome } from '@expo/vector-icons';
 import style from "../styles/Styles"
 import { LinearGradientBG } from '../components/LinearGradientBG';
 import { TodoItem } from '../components/TodoItem';
-import { IconButton, Divider, Button } from 'react-native-paper';
+import { IconButton, Divider, Button, SegmentedButtons } from 'react-native-paper';
 import { AddNewToBuIcon } from '../components/AddNewToBuIcon';
 import { AddNewTodoModal } from '../components/AddNewTodoModal';
+import { set } from 'firebase/database';
 
 export default function Todos({ navigation }) {
 
   const [todos, setTodos] = useState([])
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [modalVisible, setModalVisible] = useState(false)
+  const [filterButtons, setFilterButtons] = useState('all')
 
   useEffect(() => {
     onAuthStateChanged(auth, async (user) => {
@@ -84,8 +86,6 @@ export default function Todos({ navigation }) {
 
   let todosKeys = Object.keys(todos)
 
-  const [filterButtons, setFilterButtons] = useState('all')
-
   if (!isLoggedIn) {
     return(
         <View style={style.container}>
@@ -109,13 +109,25 @@ export default function Todos({ navigation }) {
           onPress={() => navigation.navigate('Profile')}
         />
       </View>
-      <View style={{flexDirection: 'row'}}>
-        <Button style={style.buttonSmall} textColor= '#F1F3F4'
-          mode='contained' onPress={() => setFilterButtons('all')} > all ({todosKeys.length})</Button>
-        <Button style={style.buttonSmall} textColor= '#F1F3F4'
-          mode='contained' onPress={() => setFilterButtons('unchecked')} >unchecked ({filterTodos(false)})</Button>
-        <Button style={style.buttonSmall} textColor= '#F1F3F4'
-          mode='contained' onPress={() => setFilterButtons('checked')} >checked ({filterTodos(true)})</Button>
+      <View style={{width: '90%', alignSelf: 'center', marginTop: 15, marginBottom: 10}}>
+        <SegmentedButtons
+        value={filterButtons}
+        onValueChange={setFilterButtons}
+        buttons={[
+          {
+            value: 'all',
+            label: 'All',
+          },
+          {
+            value: 'unchecked',
+            label: 'Unchecked',
+          },
+          {
+            value: 'checked',
+            label: 'Checked',
+          },
+        ]}
+        />
       </View>
       <View style={style.innercontainer}>
 

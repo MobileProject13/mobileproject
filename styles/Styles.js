@@ -185,8 +185,8 @@ export const MyTheme = {
   colors: {
     ...MD3DarkTheme.colors,
     primary: darkblue, //btn txt,icon color
-    secondaryContainer: pink, //bottomnav active bg, chips bg flat mode, segmentedbtns bg
-    onSecondaryContainer: pink, //selected segmenbtn txt+icon
+    secondaryContainer: darkblue, //bottomnav active bg, chips bg flat mode, segmentedbtns bg
+    onSecondaryContainer: lightcolor, //selected segmenbtn txt+icon
     background: darkblue, //app bg color
     surface: pink, //chips bg outlined mode
     onSurface: lightcolor, // icon colors, inputText txt color, txt color
