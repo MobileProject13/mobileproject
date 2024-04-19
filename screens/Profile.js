@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"
-import { Text, View, Pressable, Alert, ScrollView, FlatList } from "react-native"
+import { Text, View, Pressable, Alert, ScrollView, FlatList, ImageBackground } from "react-native"
 import { onAuthStateChanged } from "firebase/auth"
 import { logout, changePassword, removeUser } from "../components/Auth"
 import style from "../styles/Styles"
@@ -18,6 +18,11 @@ export default function Profile({navigation}) {
     const [isAccountSettingsVisible, setIsAccountSettingsVisible] = useState(false)
     const [isAvatarModalVisible, setIsAvatarModalVisible] = useState(false)
     const [selectedAvatar, setSelectedAvatar] = useState(null)
+    const [isBGImgModalVisible, setIsBGImgModalVisible] = useState(false)
+    const [selectedBGImg, setSelectedBGImg] = useState(null)
+
+    const openBGImgModal = () => setIsBGImgModalVisible(true)
+    const closeBGImgModal = () => setIsBGImgModalVisible(false)
 
     const openAvatarModal = () => setIsAvatarModalVisible(true)
     const closeAvatarModal = () => setIsAvatarModalVisible(false)
@@ -35,6 +40,14 @@ export default function Profile({navigation}) {
         require('../assets/avatar07.png'),
         require('../assets/avatar08.png')
     ]
+
+    const bgImages = [
+        require('../assets/bgimg01.jpg'),
+        require('../assets/bgimg02.jpg'),
+        require('../assets/bgimg03.jpg'),
+        require('../assets/bgimg04.jpg'),
+        require('../assets/bgimg05.jpg')
+]
 
     useEffect(() => {
         onAuthStateChanged(auth, async (user) => {            
@@ -122,6 +135,13 @@ export default function Profile({navigation}) {
                     onPress={openAvatarModal} 
                 > Change Avatar </Button>
                 <Button
+                    icon='image-edit-outline'
+                    textColor= '#F1F3F4'
+                    style={style.buttonsWide}
+                    mode='contained'
+                    onPress={openBGImgModal} 
+                > Change Background Image </Button>
+                <Button
                     icon='account-settings'
                     textColor= '#F1F3F4'
                     style={style.buttonsWide}
@@ -129,6 +149,12 @@ export default function Profile({navigation}) {
                     onPress={openAccountSettingsModal}
                 > Account settings </Button>
             </View>
+        <BGImgModal
+            visible={isBGImgModalVisible} 
+            onClose={closeBGImgModal}
+            setSelectedBGImg={setSelectedBGImg}
+            bgImages={bgImages}
+        />
         <ChangeAvatarModal 
             visible={isAvatarModalVisible} 
             onClose={closeAvatarModal}
@@ -144,6 +170,45 @@ export default function Profile({navigation}) {
         </View>
     )
 }
+}
+
+const BGImgModal = ({visible, onClose, setSelectedBGImg, bgImages}) => {
+
+    const handleBGImgPress = (bgImg) => {
+        setSelectedBGImg(bgImg)
+        console.log('Selected BG Image:', bgImg);
+        onClose()
+    }
+
+    return(
+        <Portal>
+            <Modal
+            visible={visible}
+            onDismiss={onClose}
+            contentContainerStyle={[style.addNewtodoModal, {height: '80%'}]}
+            >
+                <IconButton
+                        icon='close'
+                        color='white'
+                        size={24}
+                        onPress={onClose}
+                    />
+            <Text style={style.h2text}>Choose Background Image</Text>
+                <FlatList
+                data={bgImages}
+                keyExtractor={(item, index) => index.toString()}
+                contentContainerStyle={{alignItems: 'center', justifyContent: 'center'}}
+                renderItem={({item}) => (
+                    <Pressable
+                    style={{margin: 10}} 
+                    onPress={() => handleBGImgPress(item)}>
+                        <ImageBackground source={item} style={{height: 200, width:150}} />
+                    </Pressable>
+                )}
+                />
+            </Modal>
+        </Portal>
+    )
 }
 
 const ChangeAvatarModal = ({visible, onClose, setSelectedAvatar, avatars}) => {
