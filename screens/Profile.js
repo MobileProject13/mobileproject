@@ -1,17 +1,21 @@
-import React, { useState, useEffect } from "react"
-import { Text, View, Pressable, Alert, ScrollView, FlatList, ImageBackground } from "react-native"
+import React, { useState, useEffect, useContext } from "react"
+import { View, Pressable, Alert, ScrollView, FlatList, ImageBackground } from "react-native"
 import { onAuthStateChanged } from "firebase/auth"
 import { logout, changePassword, removeUser } from "../components/Auth"
 import style from "../styles/Styles"
 import { MaterialIcons } from '@expo/vector-icons'
 import { auth, db, USERS_REF } from "../firebase/Config"
 import { collection, doc, getDoc, updateDoc } from "firebase/firestore"
-import { TextInput, Modal, Portal, Button, Avatar, IconButton } from 'react-native-paper'
+import { TextInput, Modal, Portal, Button, Avatar, IconButton, Switch, useTheme, Text } from 'react-native-paper'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { avatars, bgImages, defaultBGImg } from "../components/DataArrays"
-import { green, lightcolor } from "../components/Colors";
+import { avatars, bgImages, defaultBGImgDark, defaultBGImgLight } from "../components/DataArrays"
+import { darkblue, green, lightcolor, darkblueWithOpacity, lightcolorWithOpacity } from "../components/Colors";
+import { ToggleThemesContext } from "../components/Context"
 
 export default function Profile({navigation}) {
+
+    const {toggleTheme} = useContext(ToggleThemesContext)
+    const theme = useTheme()
 
     const [isLoggedIn, setIsLoggedIn] = useState(false)
     const [email, setEmail] = useState('')    
@@ -21,6 +25,12 @@ export default function Profile({navigation}) {
     const [selectedAvatar, setSelectedAvatar] = useState(null)
     const [isBGImgModalVisible, setIsBGImgModalVisible] = useState(false)
     const [selectedBGImg, setSelectedBGImg] = useState(null)
+    const [isDarkTheme, setIsDarkTheme] = useState(theme.dark)
+
+    const onToggleSwitch = () => {
+        toggleTheme()
+        setIsDarkTheme(!isDarkTheme)
+    }
 
     const openBGImgModal = () => setIsBGImgModalVisible(true)
     const closeBGImgModal = () => setIsBGImgModalVisible(false)
@@ -88,12 +98,16 @@ export default function Profile({navigation}) {
 
     const handlePressLogout = async () => {
         logout()
-    }    
+    } 
+    
+    const defaultBGImgByTheme = isDarkTheme ? defaultBGImgDark : defaultBGImgLight
+    const defaultModalBGColor = isDarkTheme ? darkblueWithOpacity : lightcolorWithOpacity
+    const materialIconColorByTheme = isDarkTheme ? lightcolor : darkblue
 
     if (!isLoggedIn) {
         return(
             <View style={style.container}>
-                <ImageBackground source={selectedBGImg === null ? defaultBGImg : selectedBGImg} style={{flex:1}} >
+                <ImageBackground source={selectedBGImg ? selectedBGImg : defaultBGImgByTheme} style={{flex:1}} >
                 <View style={style.innercontainer}>
                 <Text style={style.h2text}>Loading..</Text>
                 </View>
@@ -103,13 +117,18 @@ export default function Profile({navigation}) {
     } else {
     return (
         <View style={style.container}>
-            <ImageBackground source={selectedBGImg ? selectedBGImg : defaultBGImg} style={{flex:1}} >
+            <ImageBackground source={selectedBGImg ? selectedBGImg : defaultBGImgByTheme} style={{flex:1}} >
             <View style={style.profiletopbar}>
                 <Pressable style={style.buttonStyle} onPress={()=> navigation.goBack()}>
-                    <MaterialIcons name="arrow-back" size={40} color={lightcolor}/>
+                    <MaterialIcons name="arrow-back" size={40} color={theme}/>
                 </Pressable>
+                <Switch 
+                value={isDarkTheme} 
+                onValueChange={onToggleSwitch}
+                style={{ transform: [{ scaleX: 1.5 }, { scaleY: 1.5 }] }}
+                 />
                 <Pressable style={style.buttonStyle} onPress={handlePressLogout}>
-                    <MaterialIcons name="logout" size={40} color={lightcolor} />
+                    <MaterialIcons name="logout" size={40} color={materialIconColorByTheme} />
                 </Pressable>                
                 </View>   
             <View style={style.innercontainer}>         
@@ -124,21 +143,21 @@ export default function Profile({navigation}) {
                 <Text style={style.infoText}>Nickname: {nickname}</Text>
                 <Button
                     icon='image-edit-outline'
-                    textColor= {lightcolor}
+                    //textColor= {theme.colors.text}
                     style={style.buttonsWide}
                     mode='contained'
                     onPress={openAvatarModal} 
                 > Change Avatar </Button>
                 <Button
                     icon='image-edit-outline'
-                    textColor= {lightcolor}
+                    //textColor= {lightcolor}
                     style={style.buttonsWide}
                     mode='contained'
                     onPress={openBGImgModal} 
                 > Change Background Image </Button>
                 <Button
                     icon='account-settings'
-                    textColor= {lightcolor}
+                    //textColor= {lightcolor}
                     style={style.buttonsWide}
                     mode='contained' 
                     onPress={openAccountSettingsModal}
@@ -150,25 +169,31 @@ export default function Profile({navigation}) {
             onClose={closeBGImgModal}
             setSelectedBGImg={setSelectedBGImg}
             bgImages={bgImages}
+            modalBGColor={defaultModalBGColor}
+            materialIconColor={materialIconColorByTheme}
         />
         <ChangeAvatarModal 
             visible={isAvatarModalVisible} 
             onClose={closeAvatarModal}
             setSelectedAvatar={setSelectedAvatar}
             avatars={avatars}
+            modalBGColor={defaultModalBGColor}
+            materialIconColor={materialIconColorByTheme}
         />
         <AccountSettingsModal 
             visible={isAccountSettingsVisible} 
             onClose={closeAccountSettingsModal}
             nickname={nickname}
             setNickname={setNickname}
+            modalBGColor={defaultModalBGColor}
+            materialIconColor={materialIconColorByTheme}
          />
         </View>
     )
 }
 }
 
-const BGImgModal = ({visible, onClose, setSelectedBGImg, bgImages}) => {
+const BGImgModal = ({visible, onClose, setSelectedBGImg, bgImages, modalBGColor, materialIconColor}) => {
 
     const userIdforAvatar = auth.currentUser.uid
 
@@ -197,11 +222,11 @@ const BGImgModal = ({visible, onClose, setSelectedBGImg, bgImages}) => {
             <Modal
             visible={visible}
             onDismiss={onClose}
-            contentContainerStyle={[style.addNewtodoModal, {height: '80%'}]}
+            contentContainerStyle={[style.addNewtodoModal, {backgroundColor: modalBGColor, height: '80%'}]}
             >
                 <IconButton
                     icon='close'
-                    color={lightcolor}
+                    color={materialIconColor}
                     size={24}
                     onPress={onClose}
                 />
@@ -221,7 +246,7 @@ const BGImgModal = ({visible, onClose, setSelectedBGImg, bgImages}) => {
                 <View style={{alignSelf: 'center', marginVertical: 10}}>
                 <Button
                     icon='close'
-                    textColor= {lightcolor}
+                    //textColor= {lightcolor}
                     style={style.buttonsWide}
                     mode='contained'
                     onPress={removeBGImg}
@@ -234,7 +259,7 @@ const BGImgModal = ({visible, onClose, setSelectedBGImg, bgImages}) => {
     )
 }
 
-const ChangeAvatarModal = ({visible, onClose, setSelectedAvatar, avatars}) => {
+const ChangeAvatarModal = ({visible, onClose, setSelectedAvatar, avatars, modalBGColor}) => {
 
     useEffect(() => {
         getAvatarPath();
@@ -279,10 +304,10 @@ const ChangeAvatarModal = ({visible, onClose, setSelectedAvatar, avatars}) => {
             <Modal
             visible={visible}
             onDismiss={onClose}
-            contentContainerStyle={style.addNewtodoModal}>
+            contentContainerStyle={[style.addNewtodoModal, {backgroundColor: modalBGColor}]}>
                 <IconButton
                         icon='close'
-                        color={lightcolor}
+                        //color={lightcolor}
                         size={24}
                         onPress={onClose}
                     />
@@ -303,7 +328,7 @@ const ChangeAvatarModal = ({visible, onClose, setSelectedAvatar, avatars}) => {
                 <View style={{alignSelf: 'center', marginVertical: 10}}>
                 <Button
                     icon='close'
-                    textColor= {lightcolor}
+                    //textColor= {lightcolor}
                     style={style.buttonsWide}
                     mode='contained'
                     onPress={removeAvatar}
@@ -316,7 +341,7 @@ const ChangeAvatarModal = ({visible, onClose, setSelectedAvatar, avatars}) => {
     )
 }
 
-const AccountSettingsModal = ({visible, onClose, nickname, setNickname}) => {
+const AccountSettingsModal = ({visible, onClose, nickname, setNickname, modalBGColor, materialIconColor}) => {
 
     const [password, setPassword] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('')
@@ -367,11 +392,11 @@ const AccountSettingsModal = ({visible, onClose, nickname, setNickname}) => {
             <Modal
                 visible={visible} 
                 onDismiss={onClose} 
-                contentContainerStyle={style.addNewtodoModal} >
+                contentContainerStyle={[style.addNewtodoModal, {backgroundColor: modalBGColor}]} >
                 <View >
                     <IconButton
                         icon='close'
-                        color={lightcolor}
+                        //color={lightcolor}
                         size={24}
                         onPress={onClose}
                     />
@@ -389,13 +414,13 @@ const AccountSettingsModal = ({visible, onClose, nickname, setNickname}) => {
                         selectionColor={lightcolor}
                         activeOutlineColor={green}
                         label='Enter new Nickname'
-                        right={<TextInput.Icon icon={() => <MaterialIcons name="person" size={24} color={lightcolor} />} />}
+                        right={<TextInput.Icon icon={() => <MaterialIcons name="person" size={24} color={materialIconColor} />} />}
                         value={nickname} 
                         onChangeText={setNickname}
                     />                   
                     <Button 
                         icon='account'
-                        textColor= {lightcolor}
+                        //textColor= {lightcolor}
                         style={style.buttonsWide}
                         mode='contained'                         
                         onPress={() => updateUserData()}>
@@ -409,7 +434,7 @@ const AccountSettingsModal = ({visible, onClose, nickname, setNickname}) => {
                         activeOutlineColor={green}
                         value={password}
                         label="Enter new password"
-                        right={<TextInput.Icon icon={() => <MaterialIcons name="lock" size={24} color={lightcolor} />} />}
+                        right={<TextInput.Icon icon={() => <MaterialIcons name="lock" size={24} color={materialIconColor} />} />}
                         onChangeText={(password) => setPassword(password)}
                         secureTextEntry={true}
                     />
@@ -420,14 +445,14 @@ const AccountSettingsModal = ({visible, onClose, nickname, setNickname}) => {
                         activeOutlineColor={green}
                         value={confirmPassword}
                         label="Confirm new password"
-                        right={<TextInput.Icon icon={() => <MaterialIcons name="lock" size={24} color={lightcolor} />} />}
+                        right={<TextInput.Icon icon={() => <MaterialIcons name="lock" size={24} color={materialIconColor} />} />}
                         onChangeText={(confirmPassword) => setConfirmPassword(confirmPassword)}
                         secureTextEntry={true}
                     />
                     <View style={style.buttonStyle}>
                         <Button
                         icon='lock'
-                        textColor= {lightcolor}
+                        //textColor= {lightcolor}
                         style={style.buttonsWide}
                         mode='contained' 
                         onPress={handlePressChangePw} > 
@@ -442,7 +467,7 @@ const AccountSettingsModal = ({visible, onClose, nickname, setNickname}) => {
                         activeOutlineColor={green}
                         value={confirmDelete}
                         label="Type DELETE to confirm"
-                        right={<TextInput.Icon icon={() => <MaterialIcons name="close" size={24} color={lightcolor} />} />}
+                        right={<TextInput.Icon icon={() => <MaterialIcons name="close" size={24} color={materialIconColor} />} />}
                         onChangeText={(confirmDelete) => setConfirmDelete(confirmDelete)}
                         autoCapitalize="characters"
                     />                    
