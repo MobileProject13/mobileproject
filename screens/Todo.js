@@ -1,6 +1,6 @@
 
 import React, { useEffect, useState } from 'react';
-import { Alert, ScrollView, Text, View, Pressable, ImageBackground } from 'react-native';
+import { Alert, ScrollView, Text, View, ImageBackground } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import {
   addDoc,
@@ -15,7 +15,6 @@ import {
 import { db, TODOS_REF, USERS_REF } from '../firebase/Config';
 import { auth } from '../firebase/Config';
 import { onAuthStateChanged } from 'firebase/auth';
-import { MaterialIcons, FontAwesome } from '@expo/vector-icons';
 import style from "../styles/Styles"
 import { LinearGradientBG } from '../components/LinearGradientBG';
 import { TodoItem } from '../components/TodoItem';
@@ -25,6 +24,7 @@ import { AddNewTodoModal } from '../components/AddNewTodoModal';
 import  AvatarIconNavigatesProfile  from '../components/AvatarIconNavigatesProfile';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { defaultBGImg } from '../components/DataArrays';
+import { lightcolor } from "../components/Colors";
 
 export default function Todos({ navigation }) {
 
@@ -56,20 +56,22 @@ export default function Todos({ navigation }) {
 
   useFocusEffect(
     React.useCallback(() => {
-      getSelectedBackgroundImage();
-    }, [])
-  );
-  
-  const getSelectedBackgroundImage = async () => {
+      const getSelectedBackgroundImage = async () => {
         try {
           const selectedBgImage = await AsyncStorage.getItem('@selected_bg_image' + userIdforAvatar);
           if (selectedBgImage !== null) {
             setSelectedBGImg(JSON.parse(selectedBgImage));
           }
+          else {
+            setSelectedBGImg(defaultBGImg);
+          }
         } catch (error) {
           console.log('Error getting selected background image:', error);
         }
   };
+      getSelectedBackgroundImage();
+    }, [])
+  );
 
   const removeTodo = async (id) => {
     try {
@@ -120,8 +122,7 @@ export default function Todos({ navigation }) {
 } else {
   return (
     <View style={style.container}>
-      <LinearGradientBG/>
-      <ImageBackground source={selectedBGImg ? selectedBGImg : defaultBGImg} style={{flex:1}} >
+      <ImageBackground source={selectedBGImg === null ? defaultBGImg : selectedBGImg} style={{flex:1}} >
       <View style={style.headerItem}>
         <Text style={style.h2text}>My todolist ({todosKeys.length})</Text>
         <AvatarIconNavigatesProfile navigation={navigation}/>
@@ -229,7 +230,7 @@ export default function Todos({ navigation }) {
        { todosKeys.length > 0 &&        
         <Button
           icon='delete'
-          textColor= '#F1F3F4'
+          textColor= {lightcolor}
           style={style.buttonsWide}
           mode='contained'
           onPress={() => createTwoButtonAlert()}

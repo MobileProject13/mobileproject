@@ -6,6 +6,7 @@ import { addDoc, collection } from 'firebase/firestore';
 import { db, auth, USERS_REF, TODOS_REF } from '../firebase/Config';
 import { MaterialIcons } from '@expo/vector-icons'
 import { Calendar } from "react-native-calendars"
+import { blue, pink, green, lightcolor } from "../components/Colors";
 
 //modal to add new todo item
 
@@ -66,8 +67,8 @@ export const AddNewTodoModal = ({isVisible, onClose}) => {
                 <TextInput
                     mode="outlined"
                     style={[style.textInput, style.marginbottomsmall]}
-                    selectionColor='#F1F3F4'
-                    activeOutlineColor='#D5F67F'                
+                    selectionColor={lightcolor}
+                    activeOutlineColor={green}                
                     label='Enter new todo'
                     right={<TextInput.Icon icon={() => <MaterialIcons name="circle" size={24} color={themeColor} />} />}                
                     value={newTodo}
@@ -75,7 +76,7 @@ export const AddNewTodoModal = ({isVisible, onClose}) => {
                     </View> 
                     <View style={{flexDirection: 'row', justifyContent: 'space-between',alignItems: 'center'}}>
                 <Button
-                    textColor= '#F1F3F4'
+                    textColor= {lightcolor}
                     style={style.buttonSmall}
                     mode='contained'
                     onPress={openColorModal}
@@ -83,7 +84,7 @@ export const AddNewTodoModal = ({isVisible, onClose}) => {
                 </Button>
                 <Button
                     icon='calendar-edit'
-                    textColor= '#F1F3F4'
+                    textColor= {lightcolor}
                     style={date ? style.buttonMedium : style.buttonSmall}
                     mode='contained'
                     onPress={openCalendarModal}
@@ -93,14 +94,14 @@ export const AddNewTodoModal = ({isVisible, onClose}) => {
                                  
                 <View style={{flexDirection: 'row', justifyContent: 'space-between',alignItems: 'center'}}>
                 <Button
-                    textColor= '#F1F3F4'
+                    textColor= {lightcolor}
                     style={style.buttonSmall}
                     mode='contained' 
                     onPress={addNewTodo}>
                     Add
                 </Button>
                 <Button
-                    textColor= '#F1F3F4'
+                    textColor= {lightcolor}
                     style={style.buttonSmall}
                     mode='contained' 
                     onPress={onClose}>
@@ -137,20 +138,20 @@ const ChooseColors = ({visible, onClose, selectThemeColor}) => {
             <View style={style.chooseColorRadiobuttonscolumn}>
               <View style={style.chooseColorRadiobuttonsrow}>
                 <RadioButton
-                  uncheckedColor='#80D4F5'
-                  value="#80D4F5" />
+                  uncheckedColor={blue}
+                  value={blue} />
                 <Text style={style.chooseColorRadiobuttonsrowText}>Blue </Text>
               </View>
               <View style={style.chooseColorRadiobuttonsrow}>
                 <RadioButton 
-                  uncheckedColor='#D5F67F'
-                  value='#D5F67F' />
+                  uncheckedColor={green}
+                  value={green} />
                 <Text style={style.chooseColorRadiobuttonsrowText}>Green </Text>
               </View>
               <View style={style.chooseColorRadiobuttonsrow}>
                 <RadioButton
-                  uncheckedColor='#F67FD4' 
-                  value='#F67FD4' />
+                  uncheckedColor={pink} 
+                  value={pink} />
                 <Text style={style.chooseColorRadiobuttonsrowText}>Pink </Text>
               </View>
             </View>

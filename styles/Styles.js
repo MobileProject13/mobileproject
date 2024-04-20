@@ -1,11 +1,12 @@
 import { StatusBar, StyleSheet } from "react-native";
 import { MD3DarkTheme } from 'react-native-paper';
+import { darkblue, blue, pink, green, lightcolor, darkblueWithOpacity } from "../components/Colors";
 
-const darkblue = '#052939'
-const blue = '#80D4F5'
-const pink = '#F67FD4'
-const green = '#D5F67F'
-const lightcolor = '#F1F3F4'
+// const darkblue = '#052939'
+// const blue = '#80D4F5'
+// const pink = '#F67FD4'
+// const green = '#D5F67F'
+// const lightcolor = '#F1F3F4'
 
 export default Styles = StyleSheet.create({
     container: {
@@ -86,7 +87,7 @@ export default Styles = StyleSheet.create({
       alignSelf: 'start'
     },
     addNewtodoModal: {      
-      backgroundColor:'rgba(5,41,57, 0.7)', //darkblue with opacity
+      backgroundColor:darkblueWithOpacity,
       borderColor: blue,
       borderWidth: 1,
       borderRadius: 10,
