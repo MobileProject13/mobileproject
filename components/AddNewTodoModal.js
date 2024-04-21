@@ -1,16 +1,19 @@
 import { Modal, Portal, Text, Button, TextInput, RadioButton } from 'react-native-paper';
 import style from '../styles/Styles';
 import { View } from 'react-native';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { addDoc, collection } from 'firebase/firestore';
 import { db, auth, USERS_REF, TODOS_REF } from '../firebase/Config';
 import { MaterialIcons } from '@expo/vector-icons'
 import { Calendar } from "react-native-calendars"
 import { blue, pink, green, lightcolor } from "../components/Colors";
+import { ToggleThemesContext } from './Context';
 
 //modal to add new todo item
 
 export const AddNewTodoModal = ({isVisible, onClose}) => {
+
+    const {theme} = useContext(ToggleThemesContext)
 
     const [newTodo, setNewTodo] = useState('')
     const [themeColor, setThemeColor] = useState('#80D4F5')
@@ -61,7 +64,7 @@ export const AddNewTodoModal = ({isVisible, onClose}) => {
             <Modal 
                 visible={isVisible} 
                 onDismiss={onClose} 
-                contentContainerStyle={style.addNewtodoModal} >
+                contentContainerStyle={[style.addNewtodoModal, {backgroundColor: theme.colors.background}]} >
               <View style={{flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>
                 <Text style={style.h2text}>Add new Todo</Text>
                 <TextInput
@@ -76,7 +79,6 @@ export const AddNewTodoModal = ({isVisible, onClose}) => {
                     </View> 
                     <View style={{flexDirection: 'row', justifyContent: 'space-between',alignItems: 'center'}}>
                 <Button
-                    textColor= {lightcolor}
                     style={style.buttonSmall}
                     mode='contained'
                     onPress={openColorModal}
@@ -84,7 +86,6 @@ export const AddNewTodoModal = ({isVisible, onClose}) => {
                 </Button>
                 <Button
                     icon='calendar-edit'
-                    textColor= {lightcolor}
                     style={date ? style.buttonMedium : style.buttonSmall}
                     mode='contained'
                     onPress={openCalendarModal}
@@ -94,14 +95,12 @@ export const AddNewTodoModal = ({isVisible, onClose}) => {
                                  
                 <View style={{flexDirection: 'row', justifyContent: 'space-between',alignItems: 'center'}}>
                 <Button
-                    textColor= {lightcolor}
                     style={style.buttonSmall}
                     mode='contained' 
                     onPress={addNewTodo}>
                     Add
                 </Button>
                 <Button
-                    textColor= {lightcolor}
                     style={style.buttonSmall}
                     mode='contained' 
                     onPress={onClose}>
@@ -123,6 +122,8 @@ export const AddNewTodoModal = ({isVisible, onClose}) => {
 
 const ChooseColors = ({visible, onClose, selectThemeColor}) => {
 
+  const {theme} = useContext(ToggleThemesContext)
+
     const handleColorChange = (color) => {
       selectThemeColor(color)
       onClose()
@@ -132,7 +133,7 @@ const ChooseColors = ({visible, onClose, selectThemeColor}) => {
         <Modal
           visible={visible}
           onDismiss={onClose}
-          contentContainerStyle={style.chooseColorModal}          
+          contentContainerStyle={[style.chooseColorModal, {backgroundColor: theme.colors.background}]}          
         >
           <RadioButton.Group onValueChange={handleColorChange}>
             <View style={style.chooseColorRadiobuttonscolumn}>
@@ -161,12 +162,14 @@ const ChooseColors = ({visible, onClose, selectThemeColor}) => {
 }
 
 const PickDate = ({visible, onClose}) => {
+
+  const {theme} = useContext(ToggleThemesContext)
   
     return(
         <Modal
           visible={visible}
           onDismiss={onClose}
-          contentContainerStyle={style.chooseColorModal}          
+          contentContainerStyle={[style.chooseColorModal, {backgroundColor: theme.colors.background}]}          
         >
           <Calendar onDayPress={onClose}/>
         </Modal>

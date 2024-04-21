@@ -1,7 +1,6 @@
 
-import React, { useEffect, useState } from 'react';
-import { Alert, ScrollView, Text, View, ImageBackground } from 'react-native';
-import { useFocusEffect } from '@react-navigation/native';
+import React, { useEffect, useState, useContext } from 'react';
+import { Alert, ScrollView, View, ImageBackground } from 'react-native';
 import {
   addDoc,
   collection,
@@ -18,13 +17,11 @@ import { onAuthStateChanged } from 'firebase/auth';
 import style from "../styles/Styles"
 import { LinearGradientBG } from '../components/LinearGradientBG';
 import { TodoItem } from '../components/TodoItem';
-import { Button, SegmentedButtons} from 'react-native-paper';
+import { Button, SegmentedButtons, Text} from 'react-native-paper';
 import { AddNewToBuIcon } from '../components/AddNewToBuIcon';
 import { AddNewTodoModal } from '../components/AddNewTodoModal';
 import  AvatarIconNavigatesProfile  from '../components/AvatarIconNavigatesProfile';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { defaultBGImg } from '../components/DataArrays';
-import { lightcolor } from "../components/Colors";
+import { BGImageContext} from '../components/Context';
 
 export default function Todos({ navigation }) {
 
@@ -32,9 +29,8 @@ export default function Todos({ navigation }) {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [modalVisible, setModalVisible] = useState(false)
   const [filterButtons, setFilterButtons] = useState('all')
-  const [selectedBGImg, setSelectedBGImg] = useState(null)
 
-  const userIdforAvatar = auth.currentUser ? auth.currentUser.uid : null;
+  const { selectedBGImg } = useContext(BGImageContext);
 
   useEffect(() => {
     onAuthStateChanged(auth, async (user) => {
@@ -53,25 +49,6 @@ export default function Todos({ navigation }) {
       }    
     })    
   }, [])
-
-  useFocusEffect(
-    React.useCallback(() => {
-      const getSelectedBackgroundImage = async () => {
-        try {
-          const selectedBgImage = await AsyncStorage.getItem('@selected_bg_image' + userIdforAvatar);
-          if (selectedBgImage !== null) {
-            setSelectedBGImg(JSON.parse(selectedBgImage));
-          }
-          else {
-            setSelectedBGImg(defaultBGImg);
-          }
-        } catch (error) {
-          console.log('Error getting selected background image:', error);
-        }
-  };
-      getSelectedBackgroundImage();
-    }, [])
-  );
 
   const removeTodo = async (id) => {
     try {
@@ -122,7 +99,7 @@ export default function Todos({ navigation }) {
 } else {
   return (
     <View style={style.container}>
-      <ImageBackground source={selectedBGImg === null ? defaultBGImg : selectedBGImg} style={{flex:1}} >
+      <ImageBackground source={selectedBGImg} style={{flex:1}} >
       <View style={style.headerItem}>
         <Text style={style.h2text}>My todolist ({todosKeys.length})</Text>
         <AvatarIconNavigatesProfile navigation={navigation}/>
@@ -230,7 +207,6 @@ export default function Todos({ navigation }) {
        { todosKeys.length > 0 &&        
         <Button
           icon='delete'
-          textColor= {lightcolor}
           style={style.buttonsWide}
           mode='contained'
           onPress={() => createTwoButtonAlert()}

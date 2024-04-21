@@ -111,7 +111,6 @@ export default Styles = StyleSheet.create({
       alignItems: 'center'
     },
     chooseColorRadiobuttonsrowText: {
-      color: lightcolor,
       fontSize: 16,
       width: 50
     },
@@ -136,8 +135,7 @@ export default Styles = StyleSheet.create({
     },
     todoItem: {
       flexDirection: 'row',
-      marginVertical: 5,     
-      backgroundColor: darkblue,
+      marginVertical: 5,
       padding: 10,
       borderRadius: 10,
       borderWidth: 1,      
@@ -145,7 +143,6 @@ export default Styles = StyleSheet.create({
       alignItems: 'center',        
     },
     todoItemText: {
-      color: lightcolor,
       fontSize: 16,
       width: '80%'
     },

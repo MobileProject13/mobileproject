@@ -6,16 +6,16 @@ import style from "../styles/Styles"
 import { MaterialIcons } from '@expo/vector-icons'
 import { auth, db, USERS_REF } from "../firebase/Config"
 import { collection, doc, getDoc, updateDoc } from "firebase/firestore"
-import { TextInput, Modal, Portal, Button, Avatar, IconButton, Switch, useTheme, Text } from 'react-native-paper'
+import { TextInput, Modal, Portal, Button, Avatar, IconButton, Switch, Text } from 'react-native-paper'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { avatars, bgImages, defaultBGImgDark, defaultBGImgLight } from "../components/DataArrays"
 import { darkblue, green, lightcolor, darkblueWithOpacity, lightcolorWithOpacity } from "../components/Colors";
-import { ToggleThemesContext } from "../components/Context"
+import { ToggleThemesContext, BGImageContext } from "../components/Context"
 
 export default function Profile({navigation}) {
 
-    const {toggleTheme} = useContext(ToggleThemesContext)
-    const theme = useTheme()
+    const {theme, toggleTheme} = useContext(ToggleThemesContext)
+    const {selectedBGImg, setSelectedBGImg} = useContext(BGImageContext)
 
     const [isLoggedIn, setIsLoggedIn] = useState(false)
     const [email, setEmail] = useState('')    
@@ -24,13 +24,24 @@ export default function Profile({navigation}) {
     const [isAvatarModalVisible, setIsAvatarModalVisible] = useState(false)
     const [selectedAvatar, setSelectedAvatar] = useState(null)
     const [isBGImgModalVisible, setIsBGImgModalVisible] = useState(false)
-    const [selectedBGImg, setSelectedBGImg] = useState(null)
-    const [isDarkTheme, setIsDarkTheme] = useState(theme.dark)
 
-    const onToggleSwitch = () => {
-        toggleTheme()
-        setIsDarkTheme(!isDarkTheme)
-    }
+    const userIdforAvatar = auth.currentUser ? auth.currentUser.uid : null;
+    const isDarkTheme = theme.dark;
+
+    // const onToggleSwitch = () => {
+    //     toggleTheme();
+    // };
+
+    const onToggleSwitch = async () => {
+        toggleTheme();
+        const setThemeInStorage = !isDarkTheme;
+        try {
+          await AsyncStorage.setItem('@theme' + userIdforAvatar, setThemeInStorage ? 'dark' : 'light');
+          console.log('profilejs stores theme:',setThemeInStorage);
+        } catch (error) {
+          console.log('Error saving theme:', error);
+        }
+      };
 
     const openBGImgModal = () => setIsBGImgModalVisible(true)
     const closeBGImgModal = () => setIsBGImgModalVisible(false)
@@ -66,7 +77,7 @@ export default function Profile({navigation}) {
         });
     }, []) 
 
-    const userIdforAvatar = auth.currentUser ? auth.currentUser.uid : null;
+    
 
     useEffect(() => {
         const fetchAvatar = async () => {
@@ -82,20 +93,6 @@ export default function Profile({navigation}) {
         fetchAvatar();
       }, []);
 
-      useEffect(() => {
-        const getSelectedBackgroundImage = async () => {
-            try {
-              const selectedBgImage = await AsyncStorage.getItem('@selected_bg_image' + userIdforAvatar);
-              if (selectedBgImage !== null) {
-                setSelectedBGImg(JSON.parse(selectedBgImage));
-              }
-            } catch (error) {
-              console.log('Error getting selected background image:', error);
-            }
-          };
-        getSelectedBackgroundImage();
-      }, []);
-
     const handlePressLogout = async () => {
         logout()
     } 
@@ -107,7 +104,7 @@ export default function Profile({navigation}) {
     if (!isLoggedIn) {
         return(
             <View style={style.container}>
-                <ImageBackground source={selectedBGImg ? selectedBGImg : defaultBGImgByTheme} style={{flex:1}} >
+                <ImageBackground source={selectedBGImg} style={{flex:1}} >
                 <View style={style.innercontainer}>
                 <Text style={style.h2text}>Loading..</Text>
                 </View>
@@ -117,10 +114,10 @@ export default function Profile({navigation}) {
     } else {
     return (
         <View style={style.container}>
-            <ImageBackground source={selectedBGImg ? selectedBGImg : defaultBGImgByTheme} style={{flex:1}} >
+            <ImageBackground source={selectedBGImg} style={{flex:1}} >
             <View style={style.profiletopbar}>
                 <Pressable style={style.buttonStyle} onPress={()=> navigation.goBack()}>
-                    <MaterialIcons name="arrow-back" size={40} color={theme}/>
+                    <MaterialIcons name="arrow-back" size={40} color={materialIconColorByTheme}/>
                 </Pressable>
                 <Switch 
                 value={isDarkTheme} 
@@ -171,6 +168,7 @@ export default function Profile({navigation}) {
             bgImages={bgImages}
             modalBGColor={defaultModalBGColor}
             materialIconColor={materialIconColorByTheme}
+            defaultBgImgbytheme={defaultBGImgByTheme}
         />
         <ChangeAvatarModal 
             visible={isAvatarModalVisible} 
@@ -193,7 +191,7 @@ export default function Profile({navigation}) {
 }
 }
 
-const BGImgModal = ({visible, onClose, setSelectedBGImg, bgImages, modalBGColor, materialIconColor}) => {
+const BGImgModal = ({visible, onClose, setSelectedBGImg, bgImages, modalBGColor, materialIconColor, defaultBgImgbytheme}) => {
 
     const userIdforAvatar = auth.currentUser.uid
 
@@ -208,7 +206,7 @@ const BGImgModal = ({visible, onClose, setSelectedBGImg, bgImages, modalBGColor,
     }
 
     const removeBGImg = async() => {
-        setSelectedBGImg(null)
+        setSelectedBGImg(defaultBgImgbytheme)
         try {
             await AsyncStorage.removeItem('@selected_bg_image' + userIdforAvatar)
         } catch (error) {

@@ -1,11 +1,13 @@
-import { Pressable, Text, View } from "react-native"
+import { Pressable, View } from "react-native"
 import style from "../styles/Styles"
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import { collection, updateDoc, doc, deleteDoc } from 'firebase/firestore'
 import { db, TODOS_REF, USERS_REF } from '../firebase/Config'
 import { MaterialIcons } from '@expo/vector-icons'
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { auth } from '../firebase/Config'
+import { ToggleThemesContext } from "./Context"
+import { Text } from "react-native-paper"
 
 
 export const TodoItem = ({todoItem: todoItem, done: done, todoId: todoId, themeColor: themeColor}) => {
@@ -38,8 +40,10 @@ export const TodoItem = ({todoItem: todoItem, done: done, todoId: todoId, themeC
             }
         }
 
+    const {theme} = useContext(ToggleThemesContext)
+
     return(
-        <View style={[style.todoItem, {borderColor: themeColor}]}>
+        <View style={[style.todoItem, { backgroundColor: theme.colors.background, borderColor: themeColor}]}>
             <Pressable onPress={onCheck}>
                 {doneState 
                 ? <MaterialIcons name={'check-box'} size={32} color={themeColor}/>
