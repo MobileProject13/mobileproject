@@ -36,7 +36,7 @@ export default function Profile({navigation}) {
         toggleTheme();
         const setThemeInStorage = !isDarkTheme;
         try {
-          await AsyncStorage.setItem('@theme' + userIdforAvatar, setThemeInStorage ? 'dark' : 'light');
+          await AsyncStorage.setItem('@theme' + userIdforAvatar, JSON.stringify(setThemeInStorage));
           console.log('profilejs stores theme:',setThemeInStorage);
         } catch (error) {
           console.log('Error saving theme:', error);
@@ -75,9 +75,7 @@ export default function Profile({navigation}) {
                 setIsLoggedIn(false)
             }
         });
-    }, []) 
-
-    
+    }, [])     
 
     useEffect(() => {
         const fetchAvatar = async () => {
@@ -97,7 +95,7 @@ export default function Profile({navigation}) {
         logout()
     } 
     
-    const defaultBGImgByTheme = isDarkTheme ? defaultBGImgDark : defaultBGImgLight
+    const defaultBGImgByTheme = isDarkTheme ? bgImages[5] : bgImages[6]
     const defaultModalBGColor = isDarkTheme ? darkblueWithOpacity : lightcolorWithOpacity
     const materialIconColorByTheme = isDarkTheme ? lightcolor : darkblue
 
@@ -206,12 +204,14 @@ const BGImgModal = ({visible, onClose, setSelectedBGImg, bgImages, modalBGColor,
     }
 
     const removeBGImg = async() => {
-        setSelectedBGImg(defaultBgImgbytheme)
+        
         try {
             await AsyncStorage.removeItem('@selected_bg_image' + userIdforAvatar)
+            console.log('Background image removed.');
         } catch (error) {
             console.log('Error removing avatar path:', error)
         }
+        setSelectedBGImg(defaultBgImgbytheme)
         onClose()
     }
 

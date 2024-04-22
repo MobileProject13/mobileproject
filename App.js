@@ -4,35 +4,43 @@ import Navigation from './components/Navigation';
 import { MyTheme, LightTheme } from './styles/Styles';
 import { ToggleThemesContext, BGImageContext } from './components/Context';
 import React, { useState, useEffect } from 'react';
-import { defaultBGImgDark, defaultBGImgLight } from './components/DataArrays';
+import { defaultBGImgDark, defaultBGImgLight, bgImages } from './components/DataArrays';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { auth } from './firebase/Config';
 
 export default function App() {
-
   const [isDarkTheme, setIsDarkTheme] = useState(true);
-  const [theme, setTheme] = useState(isDarkTheme ? MyTheme : LightTheme);
-  const [selectedBGImg, setSelectedBGImg] = useState(isDarkTheme ? defaultBGImgDark : defaultBGImgLight);
+  const [theme, setTheme] = useState(MyTheme);
+  //const [selectedBGImg, setSelectedBGImg] = useState(defaultBGImgDark);
+  const [selectedBGImg, setSelectedBGImg] = useState(bgImages[5]);
 
  const userIdforAvatar = auth.currentUser ? auth.currentUser.uid : null;
   console.log('userIdforAvatar:', userIdforAvatar);
 
-  const toggleTheme = () => {
+  const toggleTheme = async() => {
     setIsDarkTheme(!isDarkTheme);
     setTheme(isDarkTheme ? LightTheme : MyTheme);
-    setSelectedBGImg(isDarkTheme ? defaultBGImgLight : defaultBGImgDark);
-  };
-
+    // jos dark tai ligth ei ole valittu niin selectedbgimg
+    const selectedBgImage = await AsyncStorage.getItem('@selected_bg_image' + userIdforAvatar);
+  if (selectedBgImage !== null) {
+    setSelectedBGImg(JSON.parse(selectedBgImage));
+  } else {
+    setSelectedBGImg(isDarkTheme ? bgImages[6] : bgImages[5]);
+  }
+  }
 
   useEffect(() => {
     const fetchThemeAndBackgroundImage = async (userId) => {
       try {
         const storedTheme = await AsyncStorage.getItem('@theme' + userId);
         if (storedTheme !== null) {
-          const isDark = storedTheme === 'dark';
-          setIsDarkTheme(isDark);
-          setTheme(isDark ? MyTheme : LightTheme);
-          setSelectedBGImg(isDark ? defaultBGImgDark : defaultBGImgLight);
+          // const isDark = storedTheme === 'dark';
+          setIsDarkTheme(storedTheme);
+          setTheme(storedTheme ? MyTheme : LightTheme);
+          //setSelectedBGImg(storedTheme ? bgImages[5] : bgImages[6]);
+          // if(selectedBGImg === defaultBGImgLight || selectedBGImg === defaultBGImgDark) {
+          //   setSelectedBGImg(storedTheme ? defaultBGImgDark : defaultBGImgLight);
+          // }
         }
   
         const selectedBgImage = await AsyncStorage.getItem('@selected_bg_image' + userId);
@@ -52,27 +60,60 @@ export default function App() {
   
     return unsubscribe;
   }, []);
+  //_________________________________________________________
 
-  // useEffect(() => {
-  //   const getSelectedBackgroundImage = async (userId) => {
-  //     try {
-  //       const selectedBgImage = await AsyncStorage.getItem('@selected_bg_image' + userId);
-  //       if (selectedBgImage !== null) {
-  //         setSelectedBGImg(JSON.parse(selectedBgImage));
-  //       }
-  //     } catch (error) {
-  //       console.log('Error getting selected background image:', error);
-  //     }
-  //   };
+//   const [isDarkTheme, setIsDarkTheme] = useState(true);
+//   const [theme, setTheme] = useState(MyTheme);
+//   //const [selectedBGImg, setSelectedBGImg] = useState(defaultBGImgDark);
+//   const [selectedBGImg, setSelectedBGImg] = useState(null);
+
+//  const userIdforAvatar = auth.currentUser ? auth.currentUser.uid : null;
+//   console.log('userIdforAvatar:', userIdforAvatar);
+
+//   const toggleTheme = async() => {
+//     setIsDarkTheme(!isDarkTheme);
+//     setTheme(isDarkTheme ? LightTheme : MyTheme);
+//     // jos dark tai ligth ei ole valittu niin selectedbgimg
+//     setSelectedBGImg(isDarkTheme ? defaultBGImgLight : defaultBGImgDark); 
+//     // if(!selectedBGImg === defaultBGImgLight || !selectedBGImg === defaultBGImgDark){
+//     // } else{
+//     //   setSelectedBGImg(isDarkTheme ? defaultBGImgLight : defaultBGImgDark);
+//     // };
+//     // console.log('selectedBGImg:', selectedBGImg);
+//   }
+
+
+//   useEffect(() => {
+//     const fetchThemeAndBackgroundImage = async (userId) => {
+//       try {
+//         const storedTheme = await AsyncStorage.getItem('@theme' + userId);
+//         if (storedTheme !== null) {
+//           // const isDark = storedTheme === 'dark';
+//           setIsDarkTheme(storedTheme);
+//           setTheme(storedTheme ? MyTheme : LightTheme);
+//           setSelectedBGImg(storedTheme ? defaultBGImgDark : defaultBGImgLight);
+//           // if(selectedBGImg === defaultBGImgLight || selectedBGImg === defaultBGImgDark) {
+//           //   setSelectedBGImg(storedTheme ? defaultBGImgDark : defaultBGImgLight);
+//           // }
+//         }
   
-  //   const unsubscribe = auth.onAuthStateChanged((user) => {
-  //     if (user) {
-  //       getSelectedBackgroundImage(user.uid);
-  //     }
-  //   });
+//         const selectedBgImage = await AsyncStorage.getItem('@selected_bg_image' + userId);
+//         if (selectedBgImage !== null) {
+//           setSelectedBGImg(JSON.parse(selectedBgImage));
+//         }
+//       } catch (error) {
+//         console.log('Error getting theme or background image:', error);
+//       }
+//     };
   
-  //   return unsubscribe;
-  // }, []);
+//     const unsubscribe = auth.onAuthStateChanged((user) => {
+//       if (user) {
+//         fetchThemeAndBackgroundImage(user.uid);
+//       }
+//     });
+  
+//     return unsubscribe;
+//   }, []);
 
   return (
     <SafeAreaProvider>

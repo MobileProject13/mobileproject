@@ -3,8 +3,8 @@ import { auth } from "../firebase/Config"
 import { useEffect, useState } from "react"
 import { signUp } from "../components/Auth"
 import { Alert, ScrollView } from "react-native"
-import { Text, View, } from "react-native"
-import { Button, TextInput } from "react-native-paper"
+import { View } from "react-native"
+import { Button, TextInput, Text } from "react-native-paper"
 import style from "../styles/Styles"
 import { MaterialIcons } from '@expo/vector-icons'
 import { LinearGradientBG } from "../components/LinearGradientBG"
@@ -106,7 +106,6 @@ export default function Register({ navigation }) {
                         />                    
                     <Button
                         icon='account-plus'
-                        textColor= {lightcolor}
                         style={style.buttonsWide}
                         mode='contained'
                         onPress={handlePressRegister}
@@ -116,7 +115,6 @@ export default function Register({ navigation }) {
                     <Text style={style.infoText}>Already have an account?</Text>
                     <Button
                         icon='login'
-                        textColor= {lightcolor}
                         style={style.buttonsWide}
                         mode='contained'
                         onPress={() => navigation.navigate('Login')}
