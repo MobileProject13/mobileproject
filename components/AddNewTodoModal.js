@@ -2,7 +2,7 @@ import { Modal, Portal, Text, Button, TextInput, RadioButton } from 'react-nativ
 import style from '../styles/Styles';
 import { View } from 'react-native';
 import { useState } from 'react';
-import { addDoc, collection } from 'firebase/firestore';
+import { addDoc, collection, doc, getDoc } from 'firebase/firestore';
 import { db, auth, USERS_REF, TODOS_REF } from '../firebase/Config';
 import { MaterialIcons } from '@expo/vector-icons'
 import { Calendar } from "react-native-calendars"
@@ -34,17 +34,23 @@ export const AddNewTodoModal = ({isVisible, onClose}) => {
 
     const addNewTodo = async () => {
 
+
+
       const IsDateChosen = date ? date : ''
 
         try {
           if (newTodo.trim() !== '') {
             const subColRef = collection(
               db, USERS_REF, auth.currentUser.uid, TODOS_REF)
+            const docRef = doc(db, USERS_REF, auth.currentUser.uid)
+            const docSnap = await getDoc(docRef)
+            const userData = docSnap.data()
             await addDoc(subColRef, {
               done: false,
               todoItem: newTodo,
               themeColor: themeColor,
-              todoDate: IsDateChosen
+              todoDate: IsDateChosen,
+              todoOwner: userData.nickname
             })
             setNewTodo('')
             setThemeColor('#80D4F5')
