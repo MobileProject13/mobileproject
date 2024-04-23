@@ -3,7 +3,6 @@ import { View } from 'react-native';
 import style from '../styles/Styles';
 import { Button, Text } from "react-native-paper"
 import { LinearGradientBG } from '../components/LinearGradientBG';
-import { lightcolor } from "../components/Colors";
 
 export default function Landing ({ navigation }) {  
 

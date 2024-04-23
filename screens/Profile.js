@@ -244,7 +244,6 @@ const BGImgModal = ({visible, onClose, setSelectedBGImg, bgImages, modalBGColor,
                 <View style={{alignSelf: 'center', marginVertical: 10}}>
                 <Button
                     icon='close'
-                    //textColor= {lightcolor}
                     style={style.buttonsWide}
                     mode='contained'
                     onPress={removeBGImg}
@@ -305,7 +304,6 @@ const ChangeAvatarModal = ({visible, onClose, setSelectedAvatar, avatars, modalB
             contentContainerStyle={[style.addNewtodoModal, {backgroundColor: modalBGColor}]}>
                 <IconButton
                         icon='close'
-                        //color={lightcolor}
                         size={24}
                         onPress={onClose}
                     />
@@ -326,7 +324,6 @@ const ChangeAvatarModal = ({visible, onClose, setSelectedAvatar, avatars, modalB
                 <View style={{alignSelf: 'center', marginVertical: 10}}>
                 <Button
                     icon='close'
-                    //textColor= {lightcolor}
                     style={style.buttonsWide}
                     mode='contained'
                     onPress={removeAvatar}
@@ -394,7 +391,6 @@ const AccountSettingsModal = ({visible, onClose, nickname, setNickname, modalBGC
                 <View >
                     <IconButton
                         icon='close'
-                        //color={lightcolor}
                         size={24}
                         onPress={onClose}
                     />
@@ -418,7 +414,6 @@ const AccountSettingsModal = ({visible, onClose, nickname, setNickname, modalBGC
                     />                   
                     <Button 
                         icon='account'
-                        //textColor= {lightcolor}
                         style={style.buttonsWide}
                         mode='contained'                         
                         onPress={() => updateUserData()}>
@@ -450,7 +445,6 @@ const AccountSettingsModal = ({visible, onClose, nickname, setNickname, modalBGC
                     <View style={style.buttonStyle}>
                         <Button
                         icon='lock'
-                        //textColor= {lightcolor}
                         style={style.buttonsWide}
                         mode='contained' 
                         onPress={handlePressChangePw} > 
