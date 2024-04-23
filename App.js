@@ -17,18 +17,6 @@ export default function App() {
  const userIdforAvatar = auth.currentUser ? auth.currentUser.uid : null;
   console.log('userIdforAvatar:', userIdforAvatar);
 
-  const toggleTheme = async() => {
-    setIsDarkTheme(!isDarkTheme);
-    setTheme(isDarkTheme ? LightTheme : MyTheme);
-    // jos dark tai ligth ei ole valittu niin selectedbgimg
-    const selectedBgImage = await AsyncStorage.getItem('@selected_bg_image' + userIdforAvatar);
-  if (selectedBgImage !== null) {
-    setSelectedBGImg(JSON.parse(selectedBgImage));
-  } else {
-    setSelectedBGImg(isDarkTheme ? bgImages[6] : bgImages[5]);
-  }
-  }
-
   useEffect(() => {
     const fetchThemeAndBackgroundImage = async (userId) => {
       try {
@@ -43,10 +31,10 @@ export default function App() {
           // }
         }
   
-        const selectedBgImage = await AsyncStorage.getItem('@selected_bg_image' + userId);
-        if (selectedBgImage !== null) {
-          setSelectedBGImg(JSON.parse(selectedBgImage));
-        }
+    //     const selectedBgImage = await AsyncStorage.getItem('@selected_bg_image' + userId);
+    //     if (selectedBgImage !== null) {
+    //       setSelectedBGImg(JSON.parse(selectedBgImage));
+    //     }
       } catch (error) {
         console.log('Error getting theme or background image:', error);
       }
@@ -60,6 +48,20 @@ export default function App() {
   
     return unsubscribe;
   }, []);
+
+  const toggleTheme = async() => {
+    setIsDarkTheme(!isDarkTheme);
+    setTheme(isDarkTheme ? LightTheme : MyTheme);
+    // jos dark tai ligth ei ole valittu niin selectedbgimg
+    const selectedBgImage = await AsyncStorage.getItem('@selected_bg_image' + userIdforAvatar);
+  if (selectedBgImage !== null) {
+    setSelectedBGImg(JSON.parse(selectedBgImage));
+  } else {
+    setSelectedBGImg(isDarkTheme ? bgImages[6] : bgImages[5]);
+  }
+  }
+
+
   //_________________________________________________________
 
 //   const [isDarkTheme, setIsDarkTheme] = useState(true);
