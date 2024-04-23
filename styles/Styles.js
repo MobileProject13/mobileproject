@@ -183,6 +183,25 @@ export default Styles = StyleSheet.create({
         marginTop: 20,
         fontSize: 20
     },
+    calendarBox: {
+      borderWidth: 1,
+      borderColor: 'gray',
+      width: '90%',
+      marginLeft: 20
+
+    },
+    item: {
+      flex: 1,
+      borderRadius: 5,
+      padding: 10,
+      marginRight: 10,
+      marginTop: 17
+    },
+    emptyDate: {
+      height: 15,
+      flex:1,
+      paddingTop: 30
+    }
 })
 
 export const MyTheme = {
