@@ -14,5 +14,10 @@ export const bgImages = [
     require('../assets/bgimg02.jpg'),
     require('../assets/bgimg03.jpg'),
     require('../assets/bgimg04.jpg'),
-    require('../assets/bgimg05.jpg')
+    require('../assets/bgimg05.jpg'),
+    require('../assets/defaultbgimg00.jpg'),
+    require('../assets/defaultbgimg01.jpg')
 ]
+
+export const defaultBGImgDark = require('../assets/defaultbgimg00.jpg')
+export const defaultBGImgLight = require('../assets/defaultbgimg01.jpg')

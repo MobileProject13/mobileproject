@@ -1,7 +1,7 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View } from 'react-native';
 import style from '../styles/Styles';
-import { Button } from "react-native-paper"
+import { Button, Text } from "react-native-paper"
 import { LinearGradientBG } from '../components/LinearGradientBG';
 
 export default function Landing ({ navigation }) {  
@@ -17,7 +17,6 @@ export default function Landing ({ navigation }) {
           </Text>    
           <Button
           icon='login'
-          textColor= '#F1F3F4'
           style={style.buttonsWide}
           mode='contained'
           onPress={() => navigation.navigate('Login')}
@@ -27,7 +26,6 @@ export default function Landing ({ navigation }) {
           <Text style={style.infoText}>Don´t have an account?</Text>
           <Button
           icon='account-plus'
-          textColor= '#F1F3F4'
           style={style.buttonsWide}
           mode='contained'
           onPress={() => navigation.navigate('Register')}
