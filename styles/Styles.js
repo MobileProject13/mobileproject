@@ -12,8 +12,8 @@ export default Styles = StyleSheet.create({
     container: {
         flex: 1,
         marginTop: StatusBar.currentHeight + 5,
-        justifyContent: 'space-between'
-        //backgroundColor: darkblue
+        justifyContent: 'space-between',
+        backgroundColor: darkblue,
     },
     gradientbackground: {
         position: 'absolute',

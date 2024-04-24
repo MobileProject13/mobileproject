@@ -1,15 +1,20 @@
-import React from 'react';
-import { View } from 'react-native';
+import React, { useState } from 'react';
+import { View, ImageBackground } from 'react-native';
 import style from '../styles/Styles';
 import { Button, Text, IconButton } from "react-native-paper"
 import { blue } from "../components/Colors";
-import { LinearGradientBG } from '../components/LinearGradientBG';
+import { OnboardinTutorialWelcome } from '../components/OnboardinTutorialWelcome';
 
 export default function Landing ({ navigation }) {  
 
+  const [modalVisible, setModalVisible] = useState(false)
+
+  const openOnBoardingModal = () => setModalVisible(true)
+  const closeOnBoardingModal = () => setModalVisible(false)
+
       return (
         <View style={style.container}>
-        <LinearGradientBG/>
+        <ImageBackground source={require('../assets/defaultbgimg00.jpg')} style={{flex:1}} >
           <View style={style.innercontainer}>
           <Text style={style.headerText}>Welcome to</Text>
           <Text style={[style.headerText, style.marginbottom]}>TOBU!</Text>
@@ -37,9 +42,11 @@ export default function Landing ({ navigation }) {
                 icon='information-outline'
                 iconColor ={blue}
                 size={36}
-                onPress={() => navigation.navigate('OnboardingWelcome')}
-            />       
+                onPress={openOnBoardingModal}
+            />
+            <OnboardinTutorialWelcome isVisible={modalVisible} onClose={closeOnBoardingModal}/>       
           </View>
+          </ImageBackground>
         </View>
       )
 }
