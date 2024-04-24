@@ -13,6 +13,7 @@ import React from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../firebase/Config";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { OnboardTutorialWelcome } from "./OnboardinTutorialWelcome";
 
 const Tab = createMaterialTopTabNavigator()
 const Stack = createStackNavigator();
@@ -40,6 +41,7 @@ export default function Navigation() {
           <Stack.Screen name="Welcome" component={Landing} options={{ headerShown: false }} />
           <Stack.Screen name="Register" component={Register} options={{ headerShown: false }} />
           <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
+          <Stack.Screen name="OnboardingWelcome" component={OnboardTutorialWelcome} options={{ headerShown: false }} />
         </>  
         ) : (
         <>

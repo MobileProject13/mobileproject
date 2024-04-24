@@ -1,7 +1,8 @@
 import React from 'react';
 import { View } from 'react-native';
 import style from '../styles/Styles';
-import { Button, Text } from "react-native-paper"
+import { Button, Text, IconButton } from "react-native-paper"
+import { blue } from "../components/Colors";
 import { LinearGradientBG } from '../components/LinearGradientBG';
 
 export default function Landing ({ navigation }) {  
@@ -31,7 +32,13 @@ export default function Landing ({ navigation }) {
           onPress={() => navigation.navigate('Register')}
           >
           REGISTER
-          </Button>        
+          </Button>
+          <IconButton
+                icon='information-outline'
+                iconColor ={blue}
+                size={36}
+                onPress={() => navigation.navigate('OnboardingWelcome')}
+            />       
           </View>
         </View>
       )
