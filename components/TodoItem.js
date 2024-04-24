@@ -1,18 +1,20 @@
 import { Pressable, View } from "react-native"
 import style from "../styles/Styles"
-import React, { useState, useContext } from 'react'
+import React, { useState, useContext, useEffect } from 'react'
 import { collection, updateDoc, doc, deleteDoc } from 'firebase/firestore'
 import { db, TODOS_REF, USERS_REF } from '../firebase/Config'
 import { MaterialIcons } from '@expo/vector-icons'
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { auth } from '../firebase/Config'
 import { ToggleThemesContext } from "./Context"
-import { Text } from "react-native-paper"
+import { Modal, Text } from "react-native-paper"
+import { ShareTodoModal } from "./ShareTodoModal"
 
 
 export const TodoItem = ({todoItem: todoItem, done: done, todoId: todoId, themeColor: themeColor}) => {
 
     const [doneState, setDone] = useState(done)
+    const [showShareModal, setShowShareModal] = useState(false)
 
     const onCheck = async() => {
         try {
@@ -40,6 +42,18 @@ export const TodoItem = ({todoItem: todoItem, done: done, todoId: todoId, themeC
             }
         }
 
+    useEffect(() => {
+        console.log(`Modal for todoId: ${todoId} and todoItem: ${todoItem}. visible state: , ${showShareModal}`);
+    }, [showShareModal, todoId])
+
+    const onShare = () => {
+        setShowShareModal(true)
+    }
+
+    const closeShareModal = () => {
+        setShowShareModal(false);
+    }
+
     const {theme} = useContext(ToggleThemesContext)
 
     return(
@@ -55,8 +69,17 @@ export const TodoItem = ({todoItem: todoItem, done: done, todoId: todoId, themeC
             onPress={onCheck}
             >
               {todoItem}  
-            </Text>            
-            <MaterialCommunityIcons name={'trash-can-outline'} size={32} color={themeColor} onPress={onRemove}/>
+            </Text>
+            {/* <View style={{flexDirection: 'row', marginRight: 10, flex: 2, marginLeft: -30}}> */}
+                <MaterialCommunityIcons name={'share'} size={32} color={themeColor} onPress={onShare} style={{marginLeft: -30}}/>
+                {showShareModal && (
+                    <ShareTodoModal todoId={todoId} onCancel={closeShareModal} visible={showShareModal}/>
+                    // <Modal visible={true} onDismiss={closeShareModal}>
+                    //     <Text>Modal is now visible</Text>
+                    // </Modal>
+                )}            
+                <MaterialCommunityIcons name={'trash-can-outline'} size={32} color={themeColor} onPress={onRemove} style={{paddingLeft: 5, marginRight: 0}}/>
+            {/* </View> */}
         </View>
     )
 }

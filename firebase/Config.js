@@ -32,4 +32,5 @@ export const db = getFirestore(app)
 
 export const USERS_REF = 'users'
 export const TODOS_REF = 'todos'
+export const SHAREDTODOS_REF = 'sharedTodos'
 
