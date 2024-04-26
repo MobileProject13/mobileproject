@@ -97,12 +97,14 @@ const removeTodo = async (id) => {
 }
 
 const deleteTodoDocuments = async () => {
+    let unsubscribe;
     const subColRef = collection(db, USERS_REF, auth.currentUser.uid, TODOS_REF)
-    onSnapshot(subColRef, (querySnapshot) => {
+    unsubscribe = onSnapshot(subColRef, (querySnapshot) => {
         querySnapshot.docs.map(doc => {
             removeTodo(doc.id)
         })
     })
+    unsubscribe();
 }
 
 const deleteUserDocument = async () => {

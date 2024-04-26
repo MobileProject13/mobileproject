@@ -102,7 +102,8 @@ export const AddNewTodoModal = ({isVisible, onClose, todosKeys, todos}) => {
                     right={<TextInput.Icon icon={() => <MaterialIcons name="folder" size={24} color={theme.colors.text} />} />}                
                     value={newCategorie}
                     onChangeText={setNewCategorie}/>
-                    <Text style={style.infoText}>or choose Category from list:</Text>
+                    <Text style={style.infoText}>or choose Category from list:</Text>                    
+                    </View>
                     {todosKeys.length > 0 ? (
                       <>
                         <List.Accordion
@@ -126,8 +127,7 @@ export const AddNewTodoModal = ({isVisible, onClose, todosKeys, todos}) => {
                       <Text style={style.infoText}>
                         There are no categories made yet.
                       </Text>
-                    )}
-                    </View> 
+                    )} 
                     <View style={{flexDirection: 'row', justifyContent: 'space-between',alignItems: 'center'}}>
                 <Button
                     style={style.buttonSmall}

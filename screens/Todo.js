@@ -17,11 +17,12 @@ import { onAuthStateChanged } from 'firebase/auth';
 import style from "../styles/Styles"
 import { LinearGradientBG } from '../components/LinearGradientBG';
 import { TodoItem } from '../components/TodoItem';
-import { Button, SegmentedButtons, Text} from 'react-native-paper';
+import { Button, SegmentedButtons, Text, List} from 'react-native-paper';
 import { AddNewToBuIcon } from '../components/AddNewToBuIcon';
 import { AddNewTodoModal } from '../components/AddNewTodoModal';
 import  AvatarIconNavigatesProfile  from '../components/AvatarIconNavigatesProfile';
-import { BGImageContext} from '../components/Context';
+import { BGImageContext, ToggleThemesContext} from '../components/Context';
+import { blue } from '../styles/Styles';
 
 export default function Todos({ navigation }) {
 
@@ -29,16 +30,19 @@ export default function Todos({ navigation }) {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [modalVisible, setModalVisible] = useState(false)
   const [filterButtons, setFilterButtons] = useState('all')
+  const [expanded, setExpanded] = useState(false); 
 
   const { selectedBGImg } = useContext(BGImageContext);
+  const {theme} = useContext(ToggleThemesContext)
 
   useEffect(() => {
+    let unsubscribe;
     onAuthStateChanged(auth, async (user) => {
       if (user) {
         setIsLoggedIn(true)
         const subColRef = collection(
           db, USERS_REF, auth.currentUser.uid, TODOS_REF)
-          onSnapshot(subColRef, (querySnapshot) => {
+          unsubscribe = onSnapshot(subColRef, (querySnapshot) => {
             setTodos(querySnapshot.docs.map(doc => ({
               id: doc.id,
               ...doc.data()
@@ -46,9 +50,15 @@ export default function Todos({ navigation }) {
           })
       } else {
         setIsLoggedIn(false)
+        unsubscribe();
       }    
-    })    
+    }) 
+    return () => {
+      unsubscribe();
+    }  
   }, [])
+
+  const handlePressExpanded = () => setExpanded(!expanded);
 
   const removeTodo = async (id) => {
     try {
@@ -124,6 +134,27 @@ export default function Todos({ navigation }) {
         ]}
         />
       </View>
+      {todosKeys.length > 0 && (
+      <View style={{width: '80%', alignSelf: 'center'}}>
+        <List.Accordion
+          style={{borderWidth:2, borderColor: blue, borderRadius: 10}}
+          title="CATEGORIES"
+          left={props => <List.Icon {...props} icon="folder" color={theme.colors.text} />}
+          expanded={expanded}
+          onPress={handlePressExpanded}>                          
+          {
+          [...new Set(todosKeys.filter(key => todos[key].category).map(key => todos[key].category))].map((category, i) => (
+            <List.Item
+              style={{ borderBottomWidth: 2, borderColor: blue}} 
+              key={i} 
+              title={category}
+              //onPress={()=> setNewCategorie(category)} 
+              />
+          ))
+          }
+          </List.Accordion>
+        </View>
+      )}
       <View style={style.innercontainer}>
 
     {filterButtons === 'all' && (
