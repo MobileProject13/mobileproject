@@ -214,7 +214,7 @@ export default function Todos({ navigation }) {
         REMOVE ALL TODOS
         </Button>}
       </View>      
-      <AddNewTodoModal isVisible={modalVisible} onClose={()=> setModalVisible(false)} />
+      <AddNewTodoModal isVisible={modalVisible} onClose={()=> setModalVisible(false)} todosKeys={todosKeys} todos={todos}/>
       <View style={style.viewbottom}/>
       <AddNewToBuIcon onPress={()=> setModalVisible(true)}/>  
       </ImageBackground>    
