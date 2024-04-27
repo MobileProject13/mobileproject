@@ -17,7 +17,7 @@ import { onAuthStateChanged } from 'firebase/auth';
 import style from "../styles/Styles"
 import { LinearGradientBG } from '../components/LinearGradientBG';
 import { TodoItem } from '../components/TodoItem';
-import { Button, Text, List} from 'react-native-paper';
+import { Button, Text, List, IconButton} from 'react-native-paper';
 import { AddNewToBuIcon } from '../components/AddNewToBuIcon';
 import { AddNewTodoModal } from '../components/AddNewTodoModal';
 import  AvatarIconNavigatesProfile  from '../components/AvatarIconNavigatesProfile';
@@ -100,8 +100,6 @@ export default function Todos({ navigation }) {
 
   let todosKeys = Object.keys(todos)
 
-
-
   if (!isLoggedIn) {
     return(
         <View style={style.container}>
@@ -119,191 +117,100 @@ export default function Todos({ navigation }) {
         <Text style={style.h2text}>My todolist ({todosKeys.length})</Text>
         <AvatarIconNavigatesProfile navigation={navigation}/>
       </View>
-      {/* <View style={style.segmentedButtons}>
-        <SegmentedButtons
-        value={filterButtons}
-        onValueChange={setFilterButtons}
-        buttons={[
-          {
-            value: 'all',
-            label: 'All',
-          },
-          {
-            value: 'unchecked',
-            label: 'Unchecked',
-          },
-          {
-            value: 'checked',
-            label: 'Checked',
-          },
-        ]}
-        />
-      </View> */}
-
-<View style={{width: '90%', alignSelf: 'center', marginBottom: 20}}>
-      
-        <List.Accordion
-          id='0'
-          style={{borderWidth:2, borderColor: blue, borderRadius: 10}}
-          title="FILTER OPTIONS"
-          left={props => <List.Icon {...props} icon="folder" color={theme.colors.text} />}
-          expanded={expanded}
-          onPress={handlePressExpanded}
-          >
-            <List.Item
-              style={{ borderBottomWidth: 2, borderColor: blue}}  
-              title='All'
-              onPress={() => {
-                setFilter('All');
-                setExpanded(false);
-              }}
-              />
+        <View style={{width: '90%', alignSelf: 'center', marginBottom: 20}}>      
+          <List.Accordion
+            id='0'
+            style={{borderWidth:2, borderColor: blue, borderRadius: 10}}
+            title="FILTER OPTIONS"
+            left={props => <List.Icon {...props} icon="folder" color={theme.colors.text} />}
+            expanded={expanded}
+            onPress={handlePressExpanded}
+            >
               <List.Item
-              style={{ borderBottomWidth: 2, borderColor: blue}}  
-              title='Not Done'
-              onPress={() => {
-                setFilter('Not Done')
-                setExpanded(false);
-              }}
-              />
-              <List.Item
-              style={{ borderBottomWidth: 2, borderColor: blue}}  
-              title='Done'
-              onPress={() => {
-                setFilter('Done')
-                setExpanded(false);
-              }}
-              />
-              {todosKeys.some(key => todos[key].category) && (
-      
-      <List.Accordion
-        id='1'
-        style={{borderWidth:2, borderColor: blue, borderRadius: 10}}
-        title="CATEGORIES"
-        left={props => <List.Icon {...props} icon="folder" color={theme.colors.text} />}
-        expanded={categoriesExpanded}
-        onPress={handlePressCategories}>                          
-        {
-        [...new Set(todosKeys.filter(key => todos[key].category).map(key => todos[key].category))].map((category, i) => (
-          <List.Item
-            style={{ borderBottomWidth: 2, borderColor: blue}} 
-            key={i} 
-            title={category}
-            onPress={()=> {
-              setFilter('Categories')
-              setSelectedCategory(category)
-              setCategoriesExpanded(false)
-              setExpanded(false);
-            }} 
-            />
-        ))
-        }
-        </List.Accordion>
-      
-    )}          
-          </List.Accordion> 
-      </View> 
-
+                style={{ borderBottomWidth: 2, borderColor: blue}}  
+                title='All'
+                onPress={() => {
+                  setFilter('All');
+                  setExpanded(false);
+                }}
+                />
+                <List.Item
+                style={{ borderBottomWidth: 2, borderColor: blue}}  
+                title='Not Done'
+                onPress={() => {
+                  setFilter('Not Done')
+                  setExpanded(false);
+                }}
+                />
+                <List.Item
+                style={{ borderBottomWidth: 2, borderColor: blue}}  
+                title='Done'
+                onPress={() => {
+                  setFilter('Done')
+                  setExpanded(false);
+                }}
+                />
+                {todosKeys.some(key => todos[key].category) && (      
+                <List.Accordion
+                  id='1'
+                  style={{borderWidth:2, borderColor: blue, borderRadius: 10}}
+                  title="CATEGORIES"
+                  left={props => <List.Icon {...props} icon="folder" color={theme.colors.text} />}
+                  expanded={categoriesExpanded}
+                  onPress={handlePressCategories}>                          
+                  {
+                  [...new Set(todosKeys.filter(key => todos[key].category).map(key => todos[key].category))].map((category, i) => (
+                    <List.Item
+                      style={{ borderBottomWidth: 2, borderColor: blue}} 
+                      key={i} 
+                      title={category}
+                      onPress={()=> {
+                        setFilter('Categories')
+                        setSelectedCategory(category)
+                        setCategoriesExpanded(false)
+                        setExpanded(false);
+                      }} 
+                      />
+                  ))
+                  }
+                  </List.Accordion>                
+              )}          
+            </List.Accordion> 
+        </View>
       <View style={style.innercontainer}>
-<ScrollView contentContainerStyle={{flexGrow: 1}}>
-      {todosKeys.length > 0 ? (
-  <>
-  {todosKeys.filter(key => {
-    if (filter === 'All') return true;
-    if (filter === 'Not Done') return !todos[key].done;
-    if (filter === 'Done') return todos[key].done;
-    if (filter === 'Categories') return todos[key].category === selectedCategory;
-  }).map((key, i) => (
-    <TodoItem
-      key={key}
-      todoItem={todos[key].todoItem}
-      done={todos[key].done}
-      todoId={todos[key].id}
-      themeColor={todos[key].themeColor}
-    />
-  ))}
-  </>
-) : null}
-</ScrollView>
-
-    {/* {filterButtons === 'all' && (
-      <View style={style.todosContainer}>
         <ScrollView contentContainerStyle={{flexGrow: 1}}>
-          {todosKeys.length > 0 ? (
-        <>
-        {todosKeys.filter(key => !todos[key].done).map((key, i) => (
-          <TodoItem
-          key={key}
-          todoItem={todos[key].todoItem}
-          done={todos[key].done}
-          todoId={todos[key].id}
-          themeColor={todos[key].themeColor}
-          />
-        ))}
-        {todosKeys.filter(key => todos[key].done).map((key, i) => (
-          <TodoItem
-          key={key}
-          todoItem={todos[key].todoItem}
-          done={todos[key].done}
-          todoId={todos[key].id}
-          themeColor={todos[key].themeColor}
-          />
-        ))}
-      </>
-          ) : (
-            <Text style={style.infoText}>
-              There are no items.
-            </Text>
-          )}
-        </ScrollView>
-      </View>
-    )} */}
-
-    {/* {filterButtons === 'unchecked' && (
-      <View style={style.todosContainer}>
-        <ScrollView contentContainerStyle={{flexGrow: 1}}>
-          {todosKeys.length > 0 ? (
-            todosKeys.map((key, i) => (
-              !todos[i].done &&
-              <TodoItem
+              {todosKeys.length > 0 ? (
+          <>
+          {todosKeys.filter(key => {
+            if (filter === 'All') return true;
+            if (filter === 'Not Done') return !todos[key].done;
+            if (filter === 'Done') return todos[key].done;
+            if (filter === 'Categories') return todos[key].category === selectedCategory;
+          }).map((key, i) => (
+            <TodoItem
               key={key}
-              todoItem={todos[i].todoItem}
-              done={todos[i].done}
+              todoItem={todos[key].todoItem}
+              done={todos[key].done}
               todoId={todos[key].id}
-              themeColor={todos[i].themeColor}
-              />
-            ))
-          ) : (
-            <Text style={style.infoText}>
-              There are no items.
-            </Text>
-          )}
+              themeColor={todos[key].themeColor}
+            />
+          ))}
+          </>
+        ) : (
+          <>
+          <Text style={style.h2text}>No todos yet.</Text>
+          <Text style={style.infoText}>Start by pressing the </Text>
+          <IconButton
+          style={{alignSelf: 'center'}}
+                icon='plus-circle'
+                iconColor ={blue}
+                size={80}
+                onPress={() => setModalVisible(true)}
+            />
+          <Text style={style.infoText}> here or on the bottom left.</Text>
+          </>
+        )}
         </ScrollView>
-      </View>
-    )} */}
-
-    {/* {filterButtons === 'checked' && (
-      <View style={style.todosContainer}>
-        <ScrollView contentContainerStyle={{flexGrow: 1}}>
-          {todosKeys.length > 0 ? (
-            todosKeys.map((key, i) => (
-              todos[i].done &&
-              <TodoItem
-              key={key}
-              todoItem={todos[i].todoItem}
-              done={todos[i].done}
-              todoId={todos[key].id}
-              themeColor={todos[i].themeColor}
-              />
-            ))
-          ) : (
-            <Text style={style.infoText}>
-              There are no items.
-            </Text>
-          )}
-        </ScrollView>
-      </View>
-    )}       */}
        { todosKeys.length > 0 &&        
         <Button
           icon='delete'
