@@ -17,20 +17,22 @@ import { onAuthStateChanged } from 'firebase/auth';
 import style from "../styles/Styles"
 import { LinearGradientBG } from '../components/LinearGradientBG';
 import { TodoItem } from '../components/TodoItem';
-import { Button, SegmentedButtons, Text, List} from 'react-native-paper';
+import { Button, Text, List} from 'react-native-paper';
 import { AddNewToBuIcon } from '../components/AddNewToBuIcon';
 import { AddNewTodoModal } from '../components/AddNewTodoModal';
 import  AvatarIconNavigatesProfile  from '../components/AvatarIconNavigatesProfile';
 import { BGImageContext, ToggleThemesContext} from '../components/Context';
-import { blue } from '../styles/Styles';
+import { blue } from '../components/Colors';
 
 export default function Todos({ navigation }) {
 
   const [todos, setTodos] = useState([])
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [modalVisible, setModalVisible] = useState(false)
-  const [filterButtons, setFilterButtons] = useState('all')
-  const [expanded, setExpanded] = useState(false); 
+  const [filter, setFilter] = useState('All');
+  const [expanded, setExpanded] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [categoriesExpanded, setCategoriesExpanded] = useState(false); 
 
   const { selectedBGImg } = useContext(BGImageContext);
   const {theme} = useContext(ToggleThemesContext)
@@ -59,6 +61,7 @@ export default function Todos({ navigation }) {
   }, [])
 
   const handlePressExpanded = () => setExpanded(!expanded);
+  const handlePressCategories = () => setCategoriesExpanded(!categoriesExpanded);
 
   const removeTodo = async (id) => {
     try {
@@ -97,6 +100,8 @@ export default function Todos({ navigation }) {
 
   let todosKeys = Object.keys(todos)
 
+
+
   if (!isLoggedIn) {
     return(
         <View style={style.container}>
@@ -114,7 +119,7 @@ export default function Todos({ navigation }) {
         <Text style={style.h2text}>My todolist ({todosKeys.length})</Text>
         <AvatarIconNavigatesProfile navigation={navigation}/>
       </View>
-      <View style={style.segmentedButtons}>
+      {/* <View style={style.segmentedButtons}>
         <SegmentedButtons
         value={filterButtons}
         onValueChange={setFilterButtons}
@@ -133,31 +138,95 @@ export default function Todos({ navigation }) {
           },
         ]}
         />
-      </View>
-      {todosKeys.length > 0 && (
-      <View style={{width: '80%', alignSelf: 'center'}}>
+      </View> */}
+
+<View style={{width: '90%', alignSelf: 'center', marginBottom: 20}}>
+      
         <List.Accordion
+          id='0'
           style={{borderWidth:2, borderColor: blue, borderRadius: 10}}
-          title="CATEGORIES"
+          title="FILTER OPTIONS"
           left={props => <List.Icon {...props} icon="folder" color={theme.colors.text} />}
           expanded={expanded}
-          onPress={handlePressExpanded}>                          
-          {
-          [...new Set(todosKeys.filter(key => todos[key].category).map(key => todos[key].category))].map((category, i) => (
+          onPress={handlePressExpanded}
+          >
             <List.Item
-              style={{ borderBottomWidth: 2, borderColor: blue}} 
-              key={i} 
-              title={category}
-              //onPress={()=> setNewCategorie(category)} 
+              style={{ borderBottomWidth: 2, borderColor: blue}}  
+              title='All'
+              onPress={() => {
+                setFilter('All');
+                setExpanded(false);
+              }}
               />
-          ))
-          }
-          </List.Accordion>
-        </View>
-      )}
-      <View style={style.innercontainer}>
+              <List.Item
+              style={{ borderBottomWidth: 2, borderColor: blue}}  
+              title='Not Done'
+              onPress={() => {
+                setFilter('Not Done')
+                setExpanded(false);
+              }}
+              />
+              <List.Item
+              style={{ borderBottomWidth: 2, borderColor: blue}}  
+              title='Done'
+              onPress={() => {
+                setFilter('Done')
+                setExpanded(false);
+              }}
+              />
+              {todosKeys.some(key => todos[key].category) && (
+      
+      <List.Accordion
+        id='1'
+        style={{borderWidth:2, borderColor: blue, borderRadius: 10}}
+        title="CATEGORIES"
+        left={props => <List.Icon {...props} icon="folder" color={theme.colors.text} />}
+        expanded={categoriesExpanded}
+        onPress={handlePressCategories}>                          
+        {
+        [...new Set(todosKeys.filter(key => todos[key].category).map(key => todos[key].category))].map((category, i) => (
+          <List.Item
+            style={{ borderBottomWidth: 2, borderColor: blue}} 
+            key={i} 
+            title={category}
+            onPress={()=> {
+              setFilter('Categories')
+              setSelectedCategory(category)
+              setCategoriesExpanded(false)
+              setExpanded(false);
+            }} 
+            />
+        ))
+        }
+        </List.Accordion>
+      
+    )}          
+          </List.Accordion> 
+      </View> 
 
-    {filterButtons === 'all' && (
+      <View style={style.innercontainer}>
+<ScrollView contentContainerStyle={{flexGrow: 1}}>
+      {todosKeys.length > 0 ? (
+  <>
+  {todosKeys.filter(key => {
+    if (filter === 'All') return true;
+    if (filter === 'Not Done') return !todos[key].done;
+    if (filter === 'Done') return todos[key].done;
+    if (filter === 'Categories') return todos[key].category === selectedCategory;
+  }).map((key, i) => (
+    <TodoItem
+      key={key}
+      todoItem={todos[key].todoItem}
+      done={todos[key].done}
+      todoId={todos[key].id}
+      themeColor={todos[key].themeColor}
+    />
+  ))}
+  </>
+) : null}
+</ScrollView>
+
+    {/* {filterButtons === 'all' && (
       <View style={style.todosContainer}>
         <ScrollView contentContainerStyle={{flexGrow: 1}}>
           {todosKeys.length > 0 ? (
@@ -188,9 +257,9 @@ export default function Todos({ navigation }) {
           )}
         </ScrollView>
       </View>
-    )}
+    )} */}
 
-    {filterButtons === 'unchecked' && (
+    {/* {filterButtons === 'unchecked' && (
       <View style={style.todosContainer}>
         <ScrollView contentContainerStyle={{flexGrow: 1}}>
           {todosKeys.length > 0 ? (
@@ -211,9 +280,9 @@ export default function Todos({ navigation }) {
           )}
         </ScrollView>
       </View>
-    )}
+    )} */}
 
-    {filterButtons === 'checked' && (
+    {/* {filterButtons === 'checked' && (
       <View style={style.todosContainer}>
         <ScrollView contentContainerStyle={{flexGrow: 1}}>
           {todosKeys.length > 0 ? (
@@ -234,7 +303,7 @@ export default function Todos({ navigation }) {
           )}
         </ScrollView>
       </View>
-    )}      
+    )}       */}
        { todosKeys.length > 0 &&        
         <Button
           icon='delete'
