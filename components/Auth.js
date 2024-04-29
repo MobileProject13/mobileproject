@@ -8,8 +8,24 @@ import {
     sendPasswordResetEmail
 } from 'firebase/auth';
 import { auth, db, USERS_REF, TODOS_REF } from '../firebase/Config';
-import {  doc, setDoc, collection, deleteDoc, onSnapshot } from 'firebase/firestore';
+import {  doc, setDoc, collection, deleteDoc, onSnapshot, querySnapshot } from 'firebase/firestore';
 import { Alert } from 'react-native';
+
+let todosUnsubscribe
+
+const setupTodoListener = () => {
+    const subColRef = collection(db, USERS_REF, auth.currentUser.uid, TODOS_REF)
+    todosUnsubscribe = onSnapshot(subColRef, (querySnapshot) => {
+
+    })
+}
+
+const clearTodoListener = () => {
+    if(todosUnsubscribe){
+        todosUnsubscribe()
+        todosUnsubscribe = null
+    }
+}
 
 export const signUp = async (email, password, nickname) => {
     await createUserWithEmailAndPassword(auth, email, password)
@@ -28,6 +44,7 @@ export const signUp = async (email, password, nickname) => {
 }
 
 export const logout = async () => {
+    clearTodoListener()
     await signOut(auth)
     .then(() => {
         console.log("Logout successful.");
@@ -97,12 +114,22 @@ const removeTodo = async (id) => {
 }
 
 const deleteTodoDocuments = async () => {
+    if(todosUnsubscribe) {
+        todosUnsubscribe()
+    }
     const subColRef = collection(db, USERS_REF, auth.currentUser.uid, TODOS_REF)
-    onSnapshot(subColRef, (querySnapshot) => {
-        querySnapshot.docs.map(doc => {
-            removeTodo(doc.id)
+    todosUnsubscribe = onSnapshot(subColRef, (querySnapshot) => {
+        const batch = db.batch()
+        querySnapshot.docs.forEach((doc) => {
+            batch.delete(doc.ref)
         })
-    })
+        batch.commit().then(() => {
+            console.log("Todos deleted succesfully");
+        }).catch((error) => {
+            console.log("Error deleting todos:", error);
+            Alert.alert("Error deleting todos", error.message)
+        })
+    })  
 }
 
 const deleteUserDocument = async () => {

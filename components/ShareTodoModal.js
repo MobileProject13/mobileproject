@@ -1,6 +1,5 @@
 import { useState, useContext } from "react";
 import { Modal, Portal, Text, Button, TextInput, RadioButton } from 'react-native-paper';
-import { ShareTodo } from "./ShareTodo";
 import style from "../styles/Styles";
 import { ToggleThemesContext } from './Context'
 import { USERS_REF, TODOS_REF, SHAREDTODOS_REF, db, auth } from "../firebase/Config";

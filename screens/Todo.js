@@ -22,6 +22,7 @@ import { AddNewToBuIcon } from '../components/AddNewToBuIcon';
 import { AddNewTodoModal } from '../components/AddNewTodoModal';
 import  AvatarIconNavigatesProfile  from '../components/AvatarIconNavigatesProfile';
 import { BGImageContext} from '../components/Context';
+import { ShareNotification } from '../components/SharedTodoNotification';
 
 export default function Todos({ navigation }) {
 
@@ -103,6 +104,7 @@ export default function Todos({ navigation }) {
       <View style={style.headerItem}>
         <Text style={style.h2text}>My todolist ({todosKeys.length})</Text>
         <AvatarIconNavigatesProfile navigation={navigation}/>
+        <ShareNotification />
       </View>
       <View style={style.segmentedButtons}>
         <SegmentedButtons
