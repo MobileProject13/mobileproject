@@ -6,7 +6,7 @@ import {
   collection,
   deleteDoc,
   doc,
-  getDocs,
+  getDoc,
   onSnapshot,
   orderBy,
   query
@@ -28,12 +28,14 @@ import { blue } from '../components/Colors';
 export default function Todos({ navigation }) {
 
   const [todos, setTodos] = useState([])
+  const [owners, setOwners] = useState([])
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [modalVisible, setModalVisible] = useState(false)
   const [filter, setFilter] = useState('All');
   const [expanded, setExpanded] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [categoriesExpanded, setCategoriesExpanded] = useState(false); 
+  const [ownerExpanded, setOwnerExpanded] = useState(false)
 
   const { selectedBGImg } = useContext(BGImageContext);
   const {theme} = useContext(ToggleThemesContext)
@@ -43,26 +45,34 @@ export default function Todos({ navigation }) {
     onAuthStateChanged(auth, async (user) => {
       if (user) {
         setIsLoggedIn(true)
+        const userRef = doc(db, USERS_REF, user.uid)
+        const userSnap = await getDoc(userRef)
+        const userNickname = userSnap.exists() ? userSnap.data().nickname : null
+        
         const subColRef = collection(
           db, USERS_REF, auth.currentUser.uid, TODOS_REF)
           unsubscribe = onSnapshot(subColRef, (querySnapshot) => {
-            setTodos(querySnapshot.docs.map(doc => ({
+            const fetchedTodos = querySnapshot.docs.map(doc => ({
               id: doc.id,
               ...doc.data()
-            })))
+            }))
+            setTodos(fetchedTodos)
+            const fetchedOwners = [...new Set(fetchedTodos.map(todo => todo.todoOwner).filter(owner => owner && owner !== userNickname))]
+            setOwners(fetchedOwners)
           })
       } else {
         setIsLoggedIn(false)
-        unsubscribe();
+        if (unsubscribe) unsubscribe();
       }    
     }) 
     return () => {
-      unsubscribe();
+      if (unsubscribe) unsubscribe();
     }  
   }, [])
 
   const handlePressExpanded = () => setExpanded(!expanded);
   const handlePressCategories = () => setCategoriesExpanded(!categoriesExpanded);
+  const handlePressOwners = () => setOwnerExpanded(!ownerExpanded)
 
   const removeTodo = async (id) => {
     try {
@@ -176,8 +186,33 @@ export default function Todos({ navigation }) {
                   ))
                   }
                   </List.Accordion>                
-              )}          
-            </List.Accordion> 
+              )}
+              {owners.length > 0 && (
+              <List.Accordion
+              id='2'
+              style={{borderWidth:2, borderColor: blue, borderRadius: 10}}
+              title="SHARED TODOS"
+              left={props => <List.Icon {...props} icon="account-circle" color={theme.colors.text} />}
+              expanded={ownerExpanded}
+              onPress={handlePressOwners}
+              >
+                {owners.map((owner, index) => (
+                  <List.Item
+                  style={{ borderBottomWidth: 2, borderColor: blue}}
+                  key={index}
+                  title={owner}
+                  onPress={() => {
+                    setFilter('Owner')
+                    setSelectedCategory(owner)
+                    setOwnerExpanded(false)
+                    setExpanded(false)
+                  }}
+                  />
+                ))}
+              </List.Accordion>
+            )}        
+            </List.Accordion>
+
         </View>
       <View style={style.innercontainer}>
         <ScrollView contentContainerStyle={{flexGrow: 1}}>
@@ -188,6 +223,7 @@ export default function Todos({ navigation }) {
             if (filter === 'Not Done') return !todos[key].done;
             if (filter === 'Done') return todos[key].done;
             if (filter === 'Categories') return todos[key].category === selectedCategory;
+            if (filter === 'Owner') return todos[key].todoOwner === selectedCategory
           }).map((key, i) => (
             <TodoItem
               key={key}

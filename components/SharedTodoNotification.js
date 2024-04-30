@@ -44,7 +44,7 @@ export const ShareNotification = () => {
     )
 
     const handleAccept = async (todo) => {
-        const {sharedDate, sharedTo, ...todoData} = todo
+        const {sharedDate, sharedTo, category, ...todoData} = todo
         const todoId = todo.id
         const userTodoRef = doc(db, USERS_REF, auth.currentUser.uid, TODOS_REF, todoId)
         await setDoc(userTodoRef, todoData)
@@ -70,7 +70,7 @@ export const ShareNotification = () => {
             )}
             <Portal>
                 <Modal visible={ModalVisible} onDismiss={() => setModalVisible(false)} contentContainerStyle={[style.addNewtodoModal, {backgroundColor: theme.colors.background}]}>
-                    <Text>Do you accept the shared todo from: </Text>
+                    <Text>Do you accept the shared todo from: {selectedTodo?.todoOwner}</Text>
                     <View style={[{marginTop: 20}, {flexDirection: 'row', justifyContent: 'center'}]}>
                         <Button onPress={() => handleReject(selectedTodo)} mode="contained" style={[style.buttonSmall, {marginTop: 20, marginRight: 20}]}>Reject</Button>
                         <Button onPress={() => handleAccept(selectedTodo)} mode="contained" style={[style.buttonSmall, {marginTop: 20}]}>Accept</Button>
