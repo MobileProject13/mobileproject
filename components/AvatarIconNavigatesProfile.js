@@ -35,9 +35,9 @@ const AvatarIconNavigatesProfile = ({navigation}) => {
   return (
     <Pressable style={style.profileIconPosition} onPress={()=> navigation.navigate('Profile')}>
     {selectedAvatar === null ?
-        <Avatar.Icon size={40} icon='account' />
+        <Avatar.Icon size={50} icon='account' />
     :    
-        <Avatar.Image size={40} source={selectedAvatar} />
+        <Avatar.Image size={50} source={selectedAvatar} />
     }
     </Pressable>
   );

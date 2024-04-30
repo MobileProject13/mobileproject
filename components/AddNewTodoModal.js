@@ -1,4 +1,4 @@
-import { Modal, Portal, Text, Button, TextInput, RadioButton } from 'react-native-paper';
+import { Modal, Portal, Text, Button, TextInput, RadioButton, Snackbar, List } from 'react-native-paper';
 import style from '../styles/Styles';
 import { View } from 'react-native';
 import { useState, useContext } from 'react';
@@ -11,36 +11,44 @@ import { ToggleThemesContext } from './Context';
 
 //modal to add new todo item
 
-export const AddNewTodoModal = ({isVisible, onClose}) => {
+export const AddNewTodoModal = ({isVisible, onClose, todosKeys, todos}) => {
 
     const {theme} = useContext(ToggleThemesContext)
 
     const [newTodo, setNewTodo] = useState('')
     const [themeColor, setThemeColor] = useState('#80D4F5')
+    const [newCategorie, setNewCategorie] = useState('')
     const [isColorModalVisible, setIsColorModalVisible] = useState(false)
     const [isCalendarModalVisible, setIsCalendarModalVisible] = useState(false)
     const [date, setDate] = useState()
+    const [addNotification, setAddNotification] = useState(false)
+    const [nameForTodoNotification, setNameForTodoNotification] = useState(false)
+    const [expanded, setExpanded] = useState(false); 
 
-    const openColorModal = () => setIsColorModalVisible(true)    
+    const openColorModal = () => setIsColorModalVisible(true)
 
-    const closeColorModal = () => setIsColorModalVisible(false)    
+    const closeColorModal = () => setIsColorModalVisible(false)
 
-    const selectThemeColor = (color) => setThemeColor(color)    
+    const selectThemeColor = (color) => setThemeColor(color)
 
-    const openCalendarModal = () => setIsCalendarModalVisible(true)    
-
+    const openCalendarModal = () => setIsCalendarModalVisible(true)
     const closeCalendarModal = (day) => {
       setIsCalendarModalVisible(false)
       setDate(day)
     }
 
+    const handlePressExpanded = () => setExpanded(!expanded);
+
     let datePicked = date ? date?.dateString : 'Date'
 
     const addNewTodo = async () => {
 
-
-
       const IsDateChosen = date ? date : ''
+      const IsCategoryChosen = newCategorie ? newCategorie : ''
+
+      if (newTodo.trim() === '') {
+        return setNameForTodoNotification(true)
+      }
 
         try {
           if (newTodo.trim() !== '') {
@@ -54,11 +62,14 @@ export const AddNewTodoModal = ({isVisible, onClose}) => {
               todoItem: newTodo,
               themeColor: themeColor,
               todoDate: IsDateChosen,
-              todoOwner: userData.nickname
+              todoOwner: userData.nickname,
+              category: IsCategoryChosen
             })
             setNewTodo('')
             setThemeColor('#80D4F5')
             setDate()
+            setNewCategorie('')
+            setAddNotification(true)
           }
         } catch (error) {
           console.log(error.message);
@@ -82,7 +93,41 @@ export const AddNewTodoModal = ({isVisible, onClose}) => {
                     right={<TextInput.Icon icon={() => <MaterialIcons name="circle" size={24} color={themeColor} />} />}                
                     value={newTodo}
                     onChangeText={setNewTodo}/>
-                    </View> 
+                  <TextInput
+                    mode="outlined"
+                    style={[style.textInput, style.marginbottomsmall]}
+                    selectionColor={lightcolor}
+                    activeOutlineColor={green}                
+                    label='Enter new Category'
+                    right={<TextInput.Icon icon={() => <MaterialIcons name="folder" size={24} color={theme.colors.text} />} />}                
+                    value={newCategorie}
+                    onChangeText={setNewCategorie}/>
+                    <Text style={style.infoText}>or choose Category from list:</Text>                    
+                    </View>
+                    {todosKeys.length > 0 ? (
+                      <>
+                        <List.Accordion
+                          style={{ borderWidth:2, borderColor: blue, borderRadius: 10}}
+                          title="CATEGORIES"
+                          left={props => <List.Icon {...props} icon="folder" color={theme.colors.text} />}
+                          expanded={expanded}
+                          onPress={handlePressExpanded}>                          
+                          {
+                          [...new Set(todosKeys.filter(key => todos[key].category).map(key => todos[key].category))].map((category, i) => (
+                            <List.Item
+                              style={{ borderBottomWidth: 2, borderColor: blue,}} 
+                              key={i} 
+                              title={category}
+                              onPress={()=> setNewCategorie(category)} />
+                          ))
+                          }
+                          </List.Accordion>
+                        </>
+                    ) : (
+                      <Text style={style.infoText}>
+                        There are no categories made yet.
+                      </Text>
+                    )} 
                     <View style={{flexDirection: 'row', justifyContent: 'space-between',alignItems: 'center'}}>
                 <Button
                     style={style.buttonSmall}
@@ -121,7 +166,21 @@ export const AddNewTodoModal = ({isVisible, onClose}) => {
             <PickDate
             visible={isCalendarModalVisible}
             onClose={closeCalendarModal}
-            /> 
+            />
+            <Snackbar
+            visible={addNotification}
+            onDismiss={() => setAddNotification(false)}
+            duration={2000}
+            >
+              Todo added successfully!
+            </Snackbar>
+            <Snackbar
+            visible={nameForTodoNotification}
+            onDismiss={() => setNameForTodoNotification(false)}
+            duration={2000}
+            >
+              Add name of the todo, please!
+            </Snackbar> 
         </Portal>
     )    
 }
@@ -177,7 +236,31 @@ const PickDate = ({visible, onClose}) => {
           onDismiss={onClose}
           contentContainerStyle={[style.chooseColorModal, {backgroundColor: theme.colors.background}]}          
         >
-          <Calendar onDayPress={onClose}/>
+          <Calendar
+            firstDay={1}
+            theme={{
+              calendarBackground: theme.colors.background,
+              textSectionTitleColor: theme.colors.text,
+              selectedDayBackgroundColor: theme.colors.primary,
+              selectedDayTextColor: theme.colors.text,
+              todayTextColor: theme.colors.text,
+              dayTextColor: theme.colors.text,
+              textDisabledColor: blue,
+              dotColor: theme.colors.text,
+              selectedDotColor: theme.colors.text,
+              arrowColor: theme.colors.text,
+              monthTextColor: theme.colors.text,
+              textDayFontFamily: 'monospace',
+              textMonthFontFamily: 'monospace',
+              textDayHeaderFontFamily: 'monospace',
+              textDayFontWeight: '300',
+              textMonthFontWeight: 'bold',
+              textDayHeaderFontWeight: '300',
+              textDayFontSize: 16,
+              textMonthFontSize: 16,
+              textDayHeaderFontSize: 16
+            }} 
+          onDayPress={onClose}/>
         </Modal>
     )
 }
