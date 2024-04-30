@@ -29,18 +29,6 @@ export const ShareNotification = () => {
             fetchUserDetails()
         }, [])
 
-        // useEffect(() => {
-        //     if (userNickname){
-        //         console.log("Fetching shared todos for: ",userNickname)
-        //         const q = query(collection(db, SHAREDTODOS_REF), where("sharedTo", "==", userNickname))
-        //             const unsubscribe = onSnapshot(q, (querySnapshot) => {
-        //                 const todos = querySnapshot.docs.map(doc => ({id: doc.id, ...doc.data() }))
-        //                 setSharedTodos(todos)
-        //         })
-        //             return () => unsubscribe()
-        //     }
-        // },[userNickname])
-
         useFocusEffect(
             useCallback(() => {
                 if(userNickname) {
@@ -56,10 +44,12 @@ export const ShareNotification = () => {
     )
 
     const handleAccept = async (todo) => {
-        const userTodoRef = doc(db, USERS_REF, auth.currentUser.uid, TODOS_REF)
-        await setDoc(userTodoRef, {...todo})
+        const {sharedDate, sharedTo, ...todoData} = todo
+        const todoId = todo.id
+        const userTodoRef = doc(db, USERS_REF, auth.currentUser.uid, TODOS_REF, todoId)
+        await setDoc(userTodoRef, todoData)
 
-        await deleteDoc(doc(db, "sharedTodos", todo.id))
+        await deleteDoc(doc(db, "sharedTodos", todoId))
         setModalVisible(false)
     }
 
