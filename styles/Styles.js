@@ -11,7 +11,7 @@ import { darkblue, blue, pink, green, lightcolor, darkblueWithOpacity } from "..
 export default Styles = StyleSheet.create({
     container: {
         flex: 1,
-        marginTop: StatusBar.currentHeight + 5,
+       // marginTop: StatusBar.currentHeight + 5,
         justifyContent: 'space-between',
         backgroundColor: darkblue,
     },
