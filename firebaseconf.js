@@ -1,0 +1,7 @@
+export const API_KEY = "AIzaSyDpEtj_AKzK17G0fZa-tH17-P9gOXjeM78"
+export const DOMAIN = "tobu-4d270.firebaseapp.com"
+export const PROJECT_ID = "tobu-4d270"
+export const BUCKET = "tobu-4d270.appspot.com"
+export const SENDER_ID = "417304466141"
+export const APP_ID = "1:417304466141:web:d18d13749cae48524bc134"
+export const MEASUREMENT_ID = "G-NEVPRFMN87"
