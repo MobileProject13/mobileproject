@@ -145,10 +145,10 @@ export default function Budget({ navigation }) {
 						</>
 					) : (
 						<>
-							<Text style={style.h2text}>No todos yet.</Text>
-							<Text style={style.infoText}>Start by pressing the </Text>
+							<Text style={style.h2text}>You have not added any incomes or expenses</Text>
+							<Text style={style.infoText}>Start adding by pressing the "+" icon </Text>
 							<IconButton style={{ alignSelf: "center" }} icon="plus-circle" iconColor={blue} size={80} onPress={() => setModalVisible(true)} />
-							<Text style={style.infoText}> here or on the bottom left.</Text>
+							
 						</>
 					)}
 				</ScrollView>
