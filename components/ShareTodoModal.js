@@ -1,5 +1,5 @@
 import { useState, useContext } from "react";
-import { Modal, Portal, Text, Button, TextInput, RadioButton } from 'react-native-paper';
+import { Modal, Portal, Text, Button, TextInput, RadioButton, Snackbar } from 'react-native-paper';
 import style from "../styles/Styles";
 import { ToggleThemesContext } from './Context'
 import { USERS_REF, TODOS_REF, SHAREDTODOS_REF, db, auth } from "../firebase/Config";
@@ -8,6 +8,7 @@ import { collection, addDoc, doc, getDoc } from "firebase/firestore";
 export const ShareTodoModal = ({todoId, onCancel, visible}) => {
     const [nickname, setNickname] = useState('')
     const [modalVisible, setModalVisible] = useState(false)
+    const [addNotification, setAddNotification] = useState(false)
 
     const {theme} = useContext(ToggleThemesContext)
 
@@ -38,6 +39,7 @@ export const ShareTodoModal = ({todoId, onCancel, visible}) => {
                         sharedTo: nickname
                         
                     })
+                    setAddNotification(true)
                     console.log("Todo shared succesfully with ID: ", result.id);
                 } else {
                     console.log("No todo found for todo ID: ", todoId);
@@ -45,13 +47,12 @@ export const ShareTodoModal = ({todoId, onCancel, visible}) => {
             } else {
                 console.log("User not logged in");
             }
-    
         } catch (error) {
             console.log("Error sharing the doto", error);
         } 
         hideModal()
     }
-
+    console.log("Snackbar state: ",addNotification)
     
 
     return (
@@ -73,5 +74,4 @@ export const ShareTodoModal = ({todoId, onCancel, visible}) => {
         </Modal>
       </Portal>
     )
-
 }

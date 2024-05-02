@@ -74,9 +74,6 @@ export const TodoItem = ({todoItem: todoItem, done: done, todoId: todoId, themeC
                 <MaterialCommunityIcons name={'share'} size={32} color={themeColor} onPress={onShare} style={{marginLeft: -30}}/>
                 {showShareModal && (
                     <ShareTodoModal todoId={todoId} onCancel={closeShareModal} visible={showShareModal}/>
-                    // <Modal visible={true} onDismiss={closeShareModal}>
-                    //     <Text>Modal is now visible</Text>
-                    // </Modal>
                 )}            
                 <MaterialCommunityIcons name={'trash-can-outline'} size={32} color={themeColor} onPress={onRemove} style={{paddingLeft: 5, marginRight: 0}}/>
             {/* </View> */}
