@@ -96,6 +96,7 @@ export const AddNewBudgetModal = ({ isVisible, onClose, todosKeys, todos }) => {
 						label="Amount"
 						value={newTodo}
 						onChangeText={setNewTodo}
+						keyboardType="numeric"
 					/>
 				</View>
 
