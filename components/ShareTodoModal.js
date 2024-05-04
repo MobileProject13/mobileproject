@@ -6,13 +6,15 @@ import { USERS_REF, TODOS_REF, SHAREDTODOS_REF, db, auth } from "../firebase/Con
 import { collection, addDoc, doc, getDoc } from "firebase/firestore";
 
 export const ShareTodoModal = ({todoId, onCancel, visible}) => {
+
+  //Constants for nickname, showing a modal and for themes
     const [nickname, setNickname] = useState('')
     const [modalVisible, setModalVisible] = useState(false)
-    const [addNotification, setAddNotification] = useState(false)
 
     const {theme} = useContext(ToggleThemesContext)
 
     const showModal = () => setModalVisible(true)
+    //This constant closes the modal window
     const hideModal = () => {
         setModalVisible(false)
         if(typeof onCancel === 'function') {
@@ -20,6 +22,8 @@ export const ShareTodoModal = ({todoId, onCancel, visible}) => {
         }
     }
 
+    // Constant handleShare gets users id and todos id as well. Creates a collection if its not created yet and adds a document adding two field: "sharedDate and sharedTo" 
+    // and hides Modal window
     const handleShare = async () => {
         try {
             const user = auth.currentUser
@@ -39,7 +43,6 @@ export const ShareTodoModal = ({todoId, onCancel, visible}) => {
                         sharedTo: nickname
                         
                     })
-                    setAddNotification(true)
                     console.log("Todo shared succesfully with ID: ", result.id);
                 } else {
                     console.log("No todo found for todo ID: ", todoId);
@@ -52,9 +55,9 @@ export const ShareTodoModal = ({todoId, onCancel, visible}) => {
         } 
         hideModal()
     }
-    console.log("Snackbar state: ",addNotification)
     
 
+    //Rendering modal window with TextInput and buttons for handleShare function and hideModal function.
     return (
       <Portal>
         <Modal visible={visible} onDismiss={onCancel} contentContainerStyle={[style.addNewtodoModal, {backgroundColor: theme.colors.background}]}>

@@ -12,15 +12,17 @@ import dayjs from 'dayjs';
 
 const CalendarView = () => {
 
+    // items constant is for react native calendars Agenda component to render todos in Agenda view, loading is for fetching todos at Firestore and auth is for authentication 
     const [items, setItems] = useState({})
     const [loading, setLoading] = useState(true)
     const auth = getAuth()
 
+    // this function was about to create a empty Item for everyday to remove loading icon to display on those days which has no todos, but never tried due the lack of time.
+    // Also setting a current day
     const generateEmptyDates = (year, month) => {
         const startDate = dayjs(`${year}-${month}-01`)
         const endDate = startDate.endOf('month');
         const emptyData = {};
-
         let currentDate = startDate;
         while (currentDate.isBefore(endDate) || currentDate.isSame(endDate, 'day')) {
             const dateKey = currentDate.format('YYYY-MM-DD');
@@ -31,6 +33,8 @@ const CalendarView = () => {
     };
 
 
+    //This function is about fetching todos (todos name, color, which isn't done) from users via user id at todo Firestore database as doc.data and pushing data to formattedData object
+    //
     const fetchTodos = async (userId) => {
         console.log("Fetching todos for userId", userId);
         const todosRef = collection(db, USERS_REF, userId, TODOS_REF)
@@ -49,7 +53,6 @@ const CalendarView = () => {
                 const dateKey = todoDate.dateString
 
                 console.log("Processing todo: ", doc.id, doc.data());
-                // const formattedDate = todoDate || "no-date"
                 if (!formattedData[dateKey]) {
                     formattedData[dateKey] = []
                 }
@@ -77,6 +80,7 @@ const CalendarView = () => {
         }
 }
 
+    // useFocusEffect calls fetchTodos function checks if if data is up to date and set data to items state
     useFocusEffect(
         useCallback(() => {
             const currentUser = auth.currentUser;
@@ -96,6 +100,7 @@ const CalendarView = () => {
     );
 
 
+        // when user login it calls fetchTodos function and set data to items state
         useEffect(() => {
 
             const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -125,6 +130,8 @@ const CalendarView = () => {
 
     
 
+    // Rendering renders react native calendars Agenda component using items as a data and display todos name and state if its done or still waiting be done. Also it supposo to
+    // display 'No tasks for today.' text if date is empty but it's not working ATM. Calendars view is restricted to 2 years from current day. 
     return (
         <View style={Styles.container}>
             <Agenda
